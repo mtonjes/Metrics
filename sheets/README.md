@@ -15,17 +15,18 @@ Instructions how to generate CADI sheets (presumably you have already setup an a
 > cd -
 
 ```
-Follow [1] instruction if you have updated list of USA LPC authors 
+Follow [1] instruction below if you have updated list of USA LPC authors 
 ```
-> chmod +x generate_sheets.sh && ./generate_sheets.sh
+> chmod +x generate_sheets.sh
+> ./generate_sheets.sh
 ```
 
 
-You will be asked to enter your login and password, because CADI requires authentication in order to access data (note, the getting grid certificate proxy above has replaced that).
+You will be asked to enter your CERN login and password, because CADI requires authentication in order to access data (note: this will be saved after the initial run in the file).
 
 ...wait... take a break :)
 
-Generated sheets will be stored in **sheets** directory as csv files. Separator is pipe `|`
+Generated sheets will be stored in the **sheets** directory as csv files. Separator is pipe `|`
 
 For the first time script will take about 30mins because it downloads a lot of data from CADI.
 

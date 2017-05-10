@@ -1,1 +1,9 @@
 .DS_Store
+sheets
+data/analyses
+data/authors
+data/detail_pages
+data/analyses.html
+data/annotes.html
+data/sheet1.json
+data/sheet2.json
