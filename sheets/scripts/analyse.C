@@ -23,7 +23,13 @@ std::ofstream theTableHTML("ztable.html");
 std::ofstream theCADIcsv("zLPCMajorityCADI.csv");
 
 TCanvas* canv ;
-static const char category[4][20] ={"Inactive", "Published", "PAS-Only PUB", "Active"};
+static const char category[6][30] ={"Inactive", "Published", "PAS-Only PUB", "Active", "Published+PAS-Only-PUB", "Published+PAS-Only-PUB+Active"};
+// inactive 0
+// Published 1
+// PAS-Only-PUB 2
+// active 3
+// Published+PAS-Only-PUB 4
+// Published+PAS-Only-PUB+Active 5
 
 void categories3bin(std::map<TString,int> map40,
                     std::map<TString,int> map50,
@@ -79,7 +85,7 @@ void categories3bin(std::map<TString,int> map40,
     for(const auto &it : map40) {
         cat[2]->SetBinContent(mapPAGnames[it.first],it.second);
     }
-
+// cat[3] not used
     float max=0;
     for (int i=0;i<4;++i){
         cat[i]->SetBarOffset(0.15+0.25*i);
@@ -459,6 +465,12 @@ public:
      * 	3 = active
      * 	0 = all the other states, dormant, etc
      */
+// inactive 0
+// Published 1
+// PAS-Only-PUB 2
+// active 3
+// Published+PAS-Only-PUB 4
+// Published+PAS-Only-PUB+Active 5
     
     int activity() {
         //     if ((status.substr(status.length()-3)=="PUB")|| (status=="ACCEPT")) return 1
@@ -491,6 +503,35 @@ public:
         if ((status.compare(0,4,"Free")==0) || (status.compare(0,7,"Planned")==0) || (status.compare(0,7,"Started")==0) ||
             (status.compare(0,3,"AWG")==0) || (status.compare(0,10,"SUPERSEDED")==0) || (status.compare(0,15,"Thesis-Approved")==0) ||
             (status.compare(0,9,"Completed")==0) || (status.compare(0,8,"Inactive")==0)) return 0;
+ // Published+PAS-Only-PUB 4       
+        if ((status.compare(0, 6,  "ACCEPT") == 0) ||
+            (status.compare(0, 3,  "PUB") == 0) ||
+            (status.compare(0, 11, "ReadyForSub") == 0) ||
+            (status.compare(0, 11, "RefComments") == 0) ||
+            (status.compare(0, 11, "ReSubmitted") == 0) ||
+            (status.compare(0, 5,  "ReSub") == 0) ||
+            (status.compare(0, 3,  "SUB") == 0) ||
+            (status.compare(0, 12, "PAS-only-PUB") == 0) 
+           ) return 4;
+  // Published+PAS-Only-PUB+Active 5   
+  // presuming Active above contains all the possible statuses then sum will equal sum of plots. 
+  // If it doesn't, you're missing a CADI status from Active and below. 
+        if ((status.compare(0, 6,  "ACCEPT") == 0) ||
+            (status.compare(0, 3,  "PUB") == 0) ||
+            (status.compare(0, 11, "ReadyForSub") == 0) ||
+            (status.compare(0, 11, "RefComments") == 0) ||
+            (status.compare(0, 11, "ReSubmitted") == 0) ||
+            (status.compare(0, 5,  "ReSub") == 0) ||
+            (status.compare(0, 3,  "SUB") == 0) ||
+            (status.compare(0, 12, "PAS-only-PUB") == 0)  ||
+            (status.compare(0, 14, "ARC-GreenLight") == 0) ||
+            (status.compare(0, 3, "CWR") == 0) ||
+            (status.compare(0, 9, "CWR-ended") == 0) ||
+            (status.compare(0, 12, "FinalReading") == 0) ||
+            (status.compare(0, 7, "PRE-APP") == 0) ||
+            (status.compare(0, 10, "ReadyForLE") == 0) ||
+            (status.compare(0, 9, "PUB-Draft") == 0)          
+           ) return 5;
    // default is active if no other categories are selected above which is why 
    // this will work to fill out more options in active or not (only PRE-APP) and get the same result     
         return 3;
@@ -562,6 +603,7 @@ public:
 //	if (activity() == 1){
 //		std::cout << "analyse.C plot check, analysis: " << code << ", my version IfCalculate: NoAuth: "<<NoAuth<<", CalcAuthUS_notLPCnew: " << CalcAuthUS_notLPCnew << ", CalcAuthLPCnew: " << CalcAuthLPCnew <<", CalcAuthNotUS: " << CalcAuthNotUS <<  std::endl;
  //   }
+ 
    }
 
     
@@ -1179,7 +1221,7 @@ void analyse()
     vector<TH2F*> usVsLpcFrac, usVsLpcNbr,usVsLPCnewFrac, usVsLPCnewNbr;
     
     char hname[50], name[50];
-    for (int j = 0; j < 4; ++j) {
+    for (int j = 0; j < 6; ++j) {
         sprintf(hname, "nbrARC%i", j);
         sprintf(name, "Number of ARC members, category %i", j);
         nbrARC.push_back(new TH1F(hname, name,10,-0.5,9.5));
@@ -1699,7 +1741,7 @@ void analyse()
     
     
     TCanvas* canv3 = new TCanvas("canv3", "canv3", 600, 600);
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         // No stats box
         gStyle->SetOptStat(0);
         // No title
@@ -1800,7 +1842,7 @@ void analyse()
     TCanvas* canv2 = new TCanvas("canv2", "canv2", 750, 300);
     canv2->Divide(3,1) ;
     
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         canv2->cd(1);
         fracUS[j]->GetXaxis()->SetTitle("Fraction of authors from USA");
         fracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
@@ -1847,7 +1889,7 @@ void analyse()
     delete canv;
     canv = new TCanvas("canv", "canv", 600, 600);
     
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         fracUS[j]->GetXaxis()->SetTitle("Fraction of authors from USA");
         fracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
         fracUS[j]->Draw();
@@ -1874,7 +1916,7 @@ void analyse()
         
     }
     /////////////////////////////////
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         canv2->cd(1);
         arcFracUS[j]->GetXaxis()->SetTitle("Fraction of ARC from USA");
         arcFracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
@@ -1920,7 +1962,7 @@ void analyse()
     delete canv;
     canv = new TCanvas("canv", "canv", 600, 600);
     
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         arcFracUS[j]->GetXaxis()->SetTitle("Fraction of ARC from USA");
         arcFracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
         arcFracUS[j]->Draw();
@@ -1938,7 +1980,7 @@ void analyse()
         canv->Print(hname);
     }
     
-    for (int cat=0;cat<4;++cat) {
+    for (int cat=0;cat<6;++cat) {
         std::cout << "Category "<<cat<<endl;
         std::cout << "PAG & \tTotal & \tAuth US & \tLPC & \tnon-LPC & \t";
         std::cout << "Majr US & \tLPC & \tnon-LPC & \t";
