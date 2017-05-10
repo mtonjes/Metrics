@@ -298,7 +298,7 @@ public:
         //       code2 = row2[n++]; notes = row2[n++];
         //       auth = row2.integer(n++); authUSA = row2.integer(n++);
         //       institutes = row2[n++];
-          if (code=="SMP-16-002") std::cout<<"SMP-16-002: anAuth: "<<anAuth<<", anAuthUSA: "<<anAuthUSA<<", anAuthLPCnew: "<<anAuthLPCnew<<std::endl;      
+       //   if (code=="SMP-16-002") std::cout<<"SMP-16-002: anAuth: "<<anAuth<<", anAuthUSA: "<<anAuthUSA<<", anAuthLPCnew: "<<anAuthLPCnew<<std::endl;      
     }
     
     bool correct() {
@@ -410,29 +410,52 @@ public:
    bool MajAuthUSLPCnew(){return (MajAuthUS()&& ((float)anAuthLPCnew/anAuthUSA)>=0.5) ; }
 
    
-    /// Is a majority of the authods from the US
+    /// Is a majority of the authors from the US
     bool majorityUS(){return (((float)anAuthUSA/anAuth)>=0.5);}
-    
-    /// Is a majority of the authods from the LPC
+ 
+
+       
+    /// Is a majority of the authors from the LPC
     bool majorityLPC(){return (isUS() && ((float)anAuthLPC/anAuthUSA)>=0.5);}
     
     bool majorityUS_LPC(){return majorityUS()&&majorityLPC();}
     
-    /// Is a majority of the authods from the LPC
+    /// Is a majority of the authors from the LPC
     bool majorityLPCnew(){return (isUS() && ((float)anAuthLPCnew/anAuthUSA)>=0.5);}
     
     bool majorityUS_LPCnew(){return majorityUS()&&majorityLPCnew();}
 //	bool majorityUS_LPCnew(){return AuthLPCnew;}
     
-    /// Is a majority of the authods from the US, but not from the LPC
+    /// Is a majority of the authors from the US, but not from the LPC
     bool majorityUS_nonLPC(){return majorityUS()&&!majorityLPC();}
     
     
-    /// Is a majority of the authods from the US, but not from the LPC
+    /// Is a majority of the authors from the US, but not from the LPC
     bool majorityUS_nonLPCnew(){return majorityUS()&&!majorityLPCnew();}
 //	bool majorityUS_nonLPC(){return AuthUS_notLPCnew;} 
-    
 
+     /// Is a significant # of the authors from the LPC
+    bool significantLPC(){return (isUS() && ((float)anAuthLPC/anAuthUSA)>=0.3);}
+        
+    /// Is a significant # of the authors from the US
+    bool significantUS(){return (((float)anAuthUSA/anAuth)>=0.3);}
+    
+    bool significantLPCnew(){return (isUS() && ((float)anAuthLPCnew/anAuthUSA)>=0.3);}
+
+
+    bool significantUS_LPC(){return significantUS()&&significantLPC();}
+    
+        
+    bool significantUS_LPCnew(){return significantUS()&&significantLPCnew();}
+//	bool significantUS_LPCnew(){return AuthLPCnew;}
+    
+    /// Is a significant # of the authors from the US, but not from the LPC
+    bool significantUS_nonLPC(){return significantUS()&&!significantLPC();}
+    
+    
+    /// Is a significant of the authors from the US, but not from the LPC
+    bool significantUS_nonLPCnew(){return significantUS()&&!significantLPCnew();}
+    
     /// are there any US ARC chair
     bool isChairUS()           { return (arcChairUSA > 0); }
     bool isChairUS_LPC()       { return (arcChairUSA > 0) && (arcChairLPC > 0);}
@@ -449,13 +472,13 @@ public:
     /// are there any US authors, but no LPC author
     bool isCadiUS_nonLPC(){return (cadiUSA>0)&&(cadiLPC==0);}
     
-    /// Is a majority of the authods from the US
+    /// Is a majority of the authors from the US
     /// are there any US & LPC authors
     bool isCadiUS_LPCnew(){return (cadiUSA>0)&&(cadiLPCnew>0);}
     
     /// are there any US authors, but no LPC author
     bool isCadiUS_nonLPCnew(){return (cadiUSA>0)&&(cadiLPCnew==0);}
-    /// Is a majority of the authods from the US
+    /// Is a majority of the authors from the US
     
     
     /**
@@ -550,22 +573,35 @@ public:
        } else {
           USAfrac = (float)anAuthUSA/anAuth;
        }       
-       if (activity() == 1 && majorityUS_LPCnew() ){
+       if (activity() == 1 && majorityUS_LPCnew() && year()>=15 ){
        	std::cout << "analyse.C plot published analysis: " << code << ", total auth: " << anAuth << ", anAuthUSA: " << anAuthUSA << ", anAuthLPCnew: " << anAuthLPCnew << ", anAuthUSA/anAuth: " << USAfrac << ", anAuthLPCnew/anAuthUSA: " << LPC_frac << std::endl;
        	std::cout << "select analyse.C plot published analysis with >=0.5 LPCnew authors : " << code << ", booleans: majorityUS_nonLPCnew(): "<<majorityUS_nonLPCnew()<<", majorityUS(): " << majorityUS() << ", majorityUS_LPCnew(): " << majorityUS_LPCnew() <<", just for check: majorityLPCnew(): "<<majorityLPCnew()<< std::endl;
 //       	std::cout << "analyse.C plot check pub, analysis: " << code << ", my version: MajAuthUS_notLPCnew(): "<<MajAuthUS_notLPCnew()<< ", MajAuthUS(): " << MajAuthUS() << ", MajAuthUSLPCnew(): " << MajAuthUSLPCnew() <<", MajAuthNotUS(): " << MajAuthNotUS()<<  std::endl;
        }
-       if (activity() == 3 && majorityUS_LPCnew() ){
+       if (activity() == 1 && significantUS_LPCnew() && year()>=15 ){       
+       	std::cout << "select analyse.C plot published analysis with >=0.3 LPCnew authors : " << code << ", booleans: significantUS_nonLPCnew(): "<<significantUS_nonLPCnew()<<", significantUS(): " << significantUS() << ", significantUS_LPCnew(): " << significantUS_LPCnew() <<", just for check: significantLPCnew(): "<<significantLPCnew()<< std::endl;
+       }
+       if (activity() == 1 && year()>=15 ){  
+        std::cout << "ALL analyse.C plot published analysis: " << code << ", total auth: " << anAuth << ", anAuthUSA: " << anAuthUSA << ", anAuthLPCnew: " << anAuthLPCnew << ", anAuthUSA/anAuth: " << USAfrac << ", anAuthLPCnew/anAuthUSA: " << LPC_frac << std::endl;     
+       	std::cout << "ALL analyse.C plot published analysis: " << code << ", booleans: significantUS_nonLPCnew(): "<<significantUS_nonLPCnew()<<", significantUS(): " << significantUS() << ", significantUS_LPCnew(): " << significantUS_LPCnew() <<", just for check: significantLPCnew(): "<<significantLPCnew()<< std::endl;
+       }       
+       if (activity() == 3 && majorityUS_LPCnew() && year()>=15){
        	std::cout << "analyse.C plot Active analysis: " << code << ", total auth: " << anAuth << ", anAuthUSA: " << anAuthUSA << ", anAuthLPCnew: " << anAuthLPCnew << ", anAuthUSA/anAuth: " << USAfrac << ", anAuthLPCnew/anAuthUSA: " << LPC_frac << std::endl;
        	std::cout << "select analyse.C plot Active analysis with >=0.5 LPCnew authors : " << code << ", booleans: majorityUS_nonLPCnew(): "<<majorityUS_nonLPCnew()<<", majorityUS(): " << majorityUS() << ", majorityUS_LPCnew(): " << majorityUS_LPCnew() <<", just for check: majorityLPCnew(): "<<majorityLPCnew()<< std::endl;
 //       	std::cout << "analyse.C plot check pub, analysis: " << code << ", my version: MajAuthUS_notLPCnew(): "<<MajAuthUS_notLPCnew()<< ", MajAuthUS(): " << MajAuthUS() << ", MajAuthUSLPCnew(): " << MajAuthUSLPCnew() <<", MajAuthNotUS(): " << MajAuthNotUS()<<  std::endl;
        }  
-       if (activity() == 2 && majorityUS_LPCnew() ){
+        if (activity() == 3 && significantUS_LPCnew() && year()>=15){
+       	std::cout << "select analyse.C plot Active analysis with >=0.3 LPCnew authors : " << code << ", booleans: significantUS_nonLPCnew(): "<<significantUS_nonLPCnew()<<", significantUS(): " << significantUS() << ", significantUS_LPCnew(): " << significantUS_LPCnew() <<", just for check: significantLPCnew(): "<<significantLPCnew()<< std::endl;
+       }
+       if (activity() == 2 && majorityUS_LPCnew() && year()>=15){
        	std::cout << "analyse.C plot PAS-only analysis: " << code << ", total auth: " << anAuth << ", anAuthUSA: " << anAuthUSA << ", anAuthLPCnew: " << anAuthLPCnew << ", anAuthUSA/anAuth: " << USAfrac << ", anAuthLPCnew/anAuthUSA: " << LPC_frac << std::endl;
        	std::cout << "select analyse.C plot PAS-only analysis with >=0.5 LPCnew authors : " << code << ", booleans: majorityUS_nonLPCnew(): "<<majorityUS_nonLPCnew()<<", majorityUS(): " << majorityUS() << ", majorityUS_LPCnew(): " << majorityUS_LPCnew() <<", just for check: majorityLPCnew(): "<<majorityLPCnew()<< std::endl;
 //       	std::cout << "analyse.C plot check pub, analysis: " << code << ", my version: MajAuthUS_notLPCnew(): "<<MajAuthUS_notLPCnew()<< ", MajAuthUS(): " << MajAuthUS() << ", MajAuthUSLPCnew(): " << MajAuthUSLPCnew() <<", MajAuthNotUS(): " << MajAuthNotUS()<<  std::endl;
        }  
-       if (majorityUS_LPCnew() && activity()!=0){
+       if (activity() == 2 && significantUS_LPCnew() && year()>=15){
+        	std::cout << "select analyse.C plot PAS-only analysis with >=0.3 LPCnew authors : " << code << ", booleans: significantUS_nonLPCnew(): "<<significantUS_nonLPCnew()<<", significantUS(): " << significantUS() << ", significantUS_LPCnew(): " << significantUS_LPCnew() <<", just for check: significantLPCnew(): "<<significantLPCnew()<< std::endl;
+       }     
+       if (majorityUS_LPCnew() && activity()!=0 && year()>=15){
             theCADIcsv<<code<<","<<activity()<<","<<anAuth<<","<<anAuthUSA<<","<<anAuthLPCnew<<","<<(float)anAuthUSA/anAuth<<","<<(float)anAuthLPCnew/anAuthUSA<<","<<majorityUS_LPCnew()<<","<<majorityLPCnew()<<","<<majorityUS_nonLPCnew()<<","<<majorityUS()<<",>=0.5 LPCnew/USA"<<std::endl;          
        }
        return 0;
@@ -1172,6 +1208,12 @@ void analyse()
     TH2F* majUS_nonLPCauthors2D = prepareHisto2D("majUS_nonLPCauthors2D");
     TH2F* majUS_LPCnewauthors2D = prepareHisto2D("majUS_LPCnewauthors2D");
     TH2F* majUS_nonLPCnewauthors2D = prepareHisto2D("majUS_nonLPCnewauthors2D");
+
+    TH2F* signifUSauthors2D = prepareHisto2D("signifUSauthors2D");
+    TH2F* signifUS_LPCauthors2D = prepareHisto2D("signifUS_LPCauthors2D");
+    TH2F* signifUS_nonLPCauthors2D = prepareHisto2D("signifUS_nonLPCauthors2D");
+    TH2F* signifUS_LPCnewauthors2D = prepareHisto2D("signifUS_LPCnewauthors2D");
+    TH2F* signifUS_nonLPCnewauthors2D = prepareHisto2D("signifUS_nonLPCnewauthors2D");
   
     TH2F* MymajauthorsNonUS2D = prepareHisto2D("MymajauthorsNonUS2D");
     TH2F* MymajUSauthors2D = prepareHisto2D("MymajUSauthors2D");
@@ -1398,6 +1440,12 @@ void analyse()
                 if (entries[j].majorityUS_nonLPC()) majUS_nonLPCauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
                 if (entries[j].majorityUS_LPCnew()) majUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
                 if (entries[j].majorityUS_nonLPCnew()) majUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+
+                if (entries[j].significantUS()) signifUSauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+                if (entries[j].significantUS_LPC()) signifUS_LPCauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+                if (entries[j].significantUS_nonLPC()) signifUS_nonLPCauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+                if (entries[j].significantUS_LPCnew()) signifUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+                if (entries[j].significantUS_nonLPCnew()) signifUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
                 
                 if (entries[j].MajAuthUS()) MymajUSauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
                 if (entries[j].MajAuthNotUS()) MymajauthorsNonUS2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
@@ -1683,6 +1731,10 @@ void analyse()
     tstack(4, activeMany2D, majUSauthors2D, majUS_LPCauthors2D, majUS_nonLPCauthors2D, "majAuthActive",    "Majority of authors","CADI entries");
     tstack(2, activeMany2D, majUSauthors2D, majUS_LPCauthors2D, majUS_nonLPCauthors2D, "majAuthPublished", "Majority of authors","CADI entries");
     tstack(3, activeMany2D, majUSauthors2D, majUS_LPCauthors2D, majUS_nonLPCauthors2D, "majAuthPasOnly",   "Majority of authors","CADI entries");
+
+    tstack(4, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthActive",    "Significant number of authors","CADI entries");
+    tstack(2, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublished", "Significant number of authors","CADI entries");
+    tstack(3, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPasOnly",   "Significant number of authors","CADI entries");
     
     tstack(4, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthActiveNew",    "Majority of authors","CADI entries");
     tstack(2, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthPublishedNew", "Majority of authors","CADI entries");
@@ -1982,29 +2034,29 @@ void analyse()
     
     for (int cat=0;cat<6;++cat) {
         std::cout << "Category "<<cat<<endl;
-        std::cout << "PAG & \tTotal & \tAuth US & \tLPC & \tnon-LPC & \t";
-        std::cout << "Majr US & \tLPC & \tnon-LPC & \t";
-        std::cout << "Chai US & \tLPC & \tnon-LPC & \t";
-        std::cout << "Cont US & \tLPC & \tnon-LPC & \t";
-        std::cout << "ARC & \tARC US & \tLPC & \tnon-LPC & \n";
+        std::cout << "PAG & \tTotal & \tAuth US & \tLPCnew & \tnon-LPCnew & \t";
+        std::cout << "Majr US & \tLPCnew & \tnon-LPCnew & \t";
+        std::cout << "Chai US & \tLPCnew & \tnon-LPCnew & \t";
+        std::cout << "Cont US & \tLPCnew & \tnon-LPCnew & \t";
+        std::cout << "ARC & \tARC US & \tLPCnew & \tnon-LPCnew & \n";
         for (unsigned gr = 0; gr < PAG.size(); ++gr) {
             std::cout << PAG[gr]<<" & \t"<< active2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< withUSauthors2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< withUS_LPCauthors2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< withUS_nonLPCauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< withUS_LPCnewauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< withUS_nonLPCnewauthors2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< majUSauthors2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< majUS_LPCauthors2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< majUS_nonLPCauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< majUS_LPCnewauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< majUS_nonLPCnewauthors2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< chairUS2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< chairLPC2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< chairnonLPC2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< chairLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< chairnonLPCnew2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< contactUS2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< contactLPC2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< contactnonLPC2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< contactLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< contactnonLPCnew2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< totArc2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< totArcUS2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< totArcLPC2D->GetBinContent(gr+1,cat+1)
-            <<" & \t"<< totArcnonLPC2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< totArcLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< totArcnonLPCnew2D->GetBinContent(gr+1,cat+1)
             <<endl;
             //      <<"\t"<< ->GetBinContent(cat+1,gr+1)
         }
