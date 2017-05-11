@@ -2301,7 +2301,7 @@ void analyse()
     }
     
     for (int cat=0;cat<6;++cat) {
-        std::cout << "Category "<<cat<<endl;
+        std::cout << "Category "<<cat<<": "<<category[cat]<<std::endl;
         std::cout << "PAG & \tTotal & \tAuth US & \tLPCnew & \tnon-LPCnew & \t";
         std::cout << "Majr US & \tLPCnew & \tnon-LPCnew & \t";
         std::cout << "Chai US & \tLPCnew & \tnon-LPCnew & \t";
