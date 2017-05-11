@@ -1080,6 +1080,7 @@ THStack* tstack(int bin, TH2* histo, TH2F* US, TH2F* US_LPC, TH2F* US_nonLP, str
 void startTableHTML() {
     theTableHTML << "<html><head></head><body><center><table style='width:50%'><tbody>" << std::endl;
     theTableHTML << "<br>Plots below use papers from 2015-2017.<br>" << std::endl;
+    theTableHTML << "<br>CADI queried May 11, 2017 11:10.<br>" << std::endl;
     theTableHTML << "Plots that have 'New' in the names use April 2016 LPC survey + 2016-2017 DR(US) + 2015-2016 G&V(US) + 2017 LPC office survey for LPC assignment."  << std::endl;
     theTableHTML << "<br>Plots with <i>Scholars</i> in the name use Distinguished Researchers for selection.<br>"<< std::endl;
 }
@@ -1768,41 +1769,41 @@ void analyse()
 
             }
             
-//             active2D->Fill(entries[j].category().c_str(),4,1.0);
-//             if (entries[j].isChairUS()) chairUS2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].isChairUS_LPC()) chairLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].isChairUS_nonLPC()) chairnonLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].isChairUS_LPCnew()) chairLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].isChairUS_nonLPCnew()) chairnonLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             
-//             if (entries[j].isCadiUS()) contactUS2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].isCadiUS_LPC()) contactLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].isCadiUS_nonLPC()) contactnonLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].isCadiUS_LPCnew()) contactLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].isCadiUS_nonLPCnew()) contactnonLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            active2D->Fill(entries[j].category().c_str(),4,1.0);
+            if (entries[j].isChairUS()) chairUS2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].isChairUS_LPC()) chairLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].isChairUS_nonLPC()) chairnonLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].isChairUS_LPCnew()) chairLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].isChairUS_nonLPCnew()) chairnonLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            
+            if (entries[j].isCadiUS()) contactUS2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].isCadiUS_LPC()) contactLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].isCadiUS_nonLPC()) contactnonLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].isCadiUS_LPCnew()) contactLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].isCadiUS_nonLPCnew()) contactnonLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
 // 
-//             if (entries[j].hasArcUS())              arcUS2D         ->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].hasArcUS_LPC())          arcLPC2D        ->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].hasArcUS_nonLPC())       arcnonLPC2D     ->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].hasArcUS_LPCnew())       arcLPCnew2D     ->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].hasArcUS_nonLPCnew())    arcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].hasAnyArcUS())           arcCMUS2D       ->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].hasAnyArcUS_LPCnew())    arcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 4, 1.0);
-//             if (entries[j].hasAnyArcUS_nonLPCnew()) arcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
-//             
-//             totArc2D           ->Fill(entries[j].category().c_str(), 4, entries[j].arc);
-//             totArcUS2D         ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA);
-//             totArcLPC2D        ->Fill(entries[j].category().c_str(), 4, entries[j].arcLPC);
-//             totArcnonLPC2D     ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA-entries[j].arcLPC);
-//             totArcLPCnew2D     ->Fill(entries[j].category().c_str(), 4, entries[j].arcLPCnew);
-//             totArcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA-entries[j].arcLPCnew);
-//             totArcCM2D         ->Fill(entries[j].category().c_str(), 4, entries[j].arc+1);
-//             totArcCMUS2D       ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA+entries[j].arcChairUSA);
-//             totArcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 4, entries[j].arcLPCnew+entries[j].arcChairLPCnew);
-//             totArcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA
-//                                                                                             +entries[j].arcChairUSA
-//                                                                                             -entries[j].arcLPCnew
-//                                                                                             -entries[j].arcChairLPCnew);
+            if (entries[j].hasArcUS())              arcUS2D         ->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].hasArcUS_LPC())          arcLPC2D        ->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].hasArcUS_nonLPC())       arcnonLPC2D     ->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].hasArcUS_LPCnew())       arcLPCnew2D     ->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].hasArcUS_nonLPCnew())    arcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].hasAnyArcUS())           arcCMUS2D       ->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].hasAnyArcUS_LPCnew())    arcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 4, 1.0);
+            if (entries[j].hasAnyArcUS_nonLPCnew()) arcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+            
+            totArc2D           ->Fill(entries[j].category().c_str(), 4, entries[j].arc);
+            totArcUS2D         ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA);
+            totArcLPC2D        ->Fill(entries[j].category().c_str(), 4, entries[j].arcLPC);
+            totArcnonLPC2D     ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA-entries[j].arcLPC);
+            totArcLPCnew2D     ->Fill(entries[j].category().c_str(), 4, entries[j].arcLPCnew);
+            totArcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA-entries[j].arcLPCnew);
+            totArcCM2D         ->Fill(entries[j].category().c_str(), 4, entries[j].arc+1);
+            totArcCMUS2D       ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA+entries[j].arcChairUSA);
+            totArcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 4, entries[j].arcLPCnew+entries[j].arcChairLPCnew);
+            totArcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA
+                                                                                            +entries[j].arcChairUSA
+                                                                                            -entries[j].arcLPCnew
+                                                                                            -entries[j].arcChairLPCnew);
         } 
      }    
  // Sum of all
@@ -1885,41 +1886,41 @@ void analyse()
 
             }
             
-//             active2D->Fill(entries[j].category().c_str(),5,1.0);
-//             if (entries[j].isChairUS()) chairUS2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].isChairUS_LPC()) chairLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].isChairUS_nonLPC()) chairnonLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].isChairUS_LPCnew()) chairLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].isChairUS_nonLPCnew()) chairnonLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             
-//             if (entries[j].isCadiUS()) contactUS2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].isCadiUS_LPC()) contactLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].isCadiUS_nonLPC()) contactnonLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].isCadiUS_LPCnew()) contactLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].isCadiUS_nonLPCnew()) contactnonLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
-// 
-//             if (entries[j].hasArcUS())              arcUS2D         ->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].hasArcUS_LPC())          arcLPC2D        ->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].hasArcUS_nonLPC())       arcnonLPC2D     ->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].hasArcUS_LPCnew())       arcLPCnew2D     ->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].hasArcUS_nonLPCnew())    arcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].hasAnyArcUS())           arcCMUS2D       ->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].hasAnyArcUS_LPCnew())    arcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 5, 1.0);
-//             if (entries[j].hasAnyArcUS_nonLPCnew()) arcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
-//             
-//             totArc2D           ->Fill(entries[j].category().c_str(), 5, entries[j].arc);
-//             totArcUS2D         ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA);
-//             totArcLPC2D        ->Fill(entries[j].category().c_str(), 5, entries[j].arcLPC);
-//             totArcnonLPC2D     ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA-entries[j].arcLPC);
-//             totArcLPCnew2D     ->Fill(entries[j].category().c_str(), 5, entries[j].arcLPCnew);
-//             totArcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA-entries[j].arcLPCnew);
-//             totArcCM2D         ->Fill(entries[j].category().c_str(), 5, entries[j].arc+1);
-//             totArcCMUS2D       ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA+entries[j].arcChairUSA);
-//             totArcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 5, entries[j].arcLPCnew+entries[j].arcChairLPCnew);
-//             totArcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA
-//                                                                                             +entries[j].arcChairUSA
-//                                                                                             -entries[j].arcLPCnew
-//                                                                                             -entries[j].arcChairLPCnew);
+            active2D->Fill(entries[j].category().c_str(),5,1.0);
+            if (entries[j].isChairUS()) chairUS2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].isChairUS_LPC()) chairLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].isChairUS_nonLPC()) chairnonLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].isChairUS_LPCnew()) chairLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].isChairUS_nonLPCnew()) chairnonLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            
+            if (entries[j].isCadiUS()) contactUS2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].isCadiUS_LPC()) contactLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].isCadiUS_nonLPC()) contactnonLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].isCadiUS_LPCnew()) contactLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].isCadiUS_nonLPCnew()) contactnonLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+
+            if (entries[j].hasArcUS())              arcUS2D         ->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].hasArcUS_LPC())          arcLPC2D        ->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].hasArcUS_nonLPC())       arcnonLPC2D     ->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].hasArcUS_LPCnew())       arcLPCnew2D     ->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].hasArcUS_nonLPCnew())    arcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].hasAnyArcUS())           arcCMUS2D       ->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].hasAnyArcUS_LPCnew())    arcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 5, 1.0);
+            if (entries[j].hasAnyArcUS_nonLPCnew()) arcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+            
+            totArc2D           ->Fill(entries[j].category().c_str(), 5, entries[j].arc);
+            totArcUS2D         ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA);
+            totArcLPC2D        ->Fill(entries[j].category().c_str(), 5, entries[j].arcLPC);
+            totArcnonLPC2D     ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA-entries[j].arcLPC);
+            totArcLPCnew2D     ->Fill(entries[j].category().c_str(), 5, entries[j].arcLPCnew);
+            totArcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA-entries[j].arcLPCnew);
+            totArcCM2D         ->Fill(entries[j].category().c_str(), 5, entries[j].arc+1);
+            totArcCMUS2D       ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA+entries[j].arcChairUSA);
+            totArcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 5, entries[j].arcLPCnew+entries[j].arcChairLPCnew);
+            totArcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA
+                                                                                            +entries[j].arcChairUSA
+                                                                                            -entries[j].arcLPCnew
+                                                                                            -entries[j].arcChairLPCnew);
         } 
      }           
         //     if (entries[j].category("B2G") && entries[j].activity()==3 ){
