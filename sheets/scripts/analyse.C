@@ -23,7 +23,8 @@ std::ofstream theTableHTML("ztable.html");
 std::ofstream theCADIcsv("zLPCMajorityCADI.csv");
 
 TCanvas* canv ;
-static const char category[6][30] ={"Inactive", "Published", "PAS-Only PUB", "Active", "Published+PAS-Only-PUB", "Published+PAS-Only-PUB+Active"};
+static const char category[4][20] ={"Inactive", "Published", "PAS-Only PUB", "Active"};
+static const char categorySum[2][30]={"Published+PAS-Only-PUB", "Published+PAS-Only-PUB+Active"};
 // inactive 0
 // Published 1
 // PAS-Only-PUB 2
@@ -492,8 +493,6 @@ public:
 // Published 1
 // PAS-Only-PUB 2
 // active 3
-// Published+PAS-Only-PUB 4
-// Published+PAS-Only-PUB+Active 5
     
     int activity() {
         //     if ((status.substr(status.length()-3)=="PUB")|| (status=="ACCEPT")) return 1
@@ -526,35 +525,6 @@ public:
         if ((status.compare(0,4,"Free")==0) || (status.compare(0,7,"Planned")==0) || (status.compare(0,7,"Started")==0) ||
             (status.compare(0,3,"AWG")==0) || (status.compare(0,10,"SUPERSEDED")==0) || (status.compare(0,15,"Thesis-Approved")==0) ||
             (status.compare(0,9,"Completed")==0) || (status.compare(0,8,"Inactive")==0)) return 0;
- // Published+PAS-Only-PUB 4       
-        if ((status.compare(0, 6,  "ACCEPT") == 0) ||
-            (status.compare(0, 3,  "PUB") == 0) ||
-            (status.compare(0, 11, "ReadyForSub") == 0) ||
-            (status.compare(0, 11, "RefComments") == 0) ||
-            (status.compare(0, 11, "ReSubmitted") == 0) ||
-            (status.compare(0, 5,  "ReSub") == 0) ||
-            (status.compare(0, 3,  "SUB") == 0) ||
-            (status.compare(0, 12, "PAS-only-PUB") == 0) 
-           ) return 4;
-  // Published+PAS-Only-PUB+Active 5   
-  // presuming Active above contains all the possible statuses then sum will equal sum of plots. 
-  // If it doesn't, you're missing a CADI status from Active and below. 
-        if ((status.compare(0, 6,  "ACCEPT") == 0) ||
-            (status.compare(0, 3,  "PUB") == 0) ||
-            (status.compare(0, 11, "ReadyForSub") == 0) ||
-            (status.compare(0, 11, "RefComments") == 0) ||
-            (status.compare(0, 11, "ReSubmitted") == 0) ||
-            (status.compare(0, 5,  "ReSub") == 0) ||
-            (status.compare(0, 3,  "SUB") == 0) ||
-            (status.compare(0, 12, "PAS-only-PUB") == 0)  ||
-            (status.compare(0, 14, "ARC-GreenLight") == 0) ||
-            (status.compare(0, 3, "CWR") == 0) ||
-            (status.compare(0, 9, "CWR-ended") == 0) ||
-            (status.compare(0, 12, "FinalReading") == 0) ||
-            (status.compare(0, 7, "PRE-APP") == 0) ||
-            (status.compare(0, 10, "ReadyForLE") == 0) ||
-            (status.compare(0, 9, "PUB-Draft") == 0)          
-           ) return 5;
    // default is active if no other categories are selected above which is why 
    // this will work to fill out more options in active or not (only PRE-APP) and get the same result     
         return 3;
@@ -1263,7 +1233,7 @@ void analyse()
     vector<TH2F*> usVsLpcFrac, usVsLpcNbr,usVsLPCnewFrac, usVsLPCnewNbr;
     
     char hname[50], name[50];
-    for (int j = 0; j < 6; ++j) {
+    for (int j = 0; j < 4; ++j) {
         sprintf(hname, "nbrARC%i", j);
         sprintf(name, "Number of ARC members, category %i", j);
         nbrARC.push_back(new TH1F(hname, name,10,-0.5,9.5));
@@ -1360,7 +1330,7 @@ void analyse()
         //if (entries[j].getsamples() == "Run1") continue;
         //if (entries[j].getsamples() == "Run2") continue;
         if(entries[j].year() < 15) continue;
-        std::cout <<"j:"<< j<<", entries[j].code(): "<<entries[j].code<<", entries[j].year(): "<<entries[j].year()<< std::endl;
+        std::cout <<"Checking each CADI entry, j:"<< j<<", entries[j].code(): "<<entries[j].code<<", entries[j].year(): "<<entries[j].year()<<", entries[j].status: "<<entries[j].status<<", entries[j].activity(): "<<entries[j].activity()<< std::endl;
         
         // Select only PAGs
         if (find(PAG.begin(),PAG.end(),entries[j].category().c_str())==PAG.end()) continue;
@@ -1718,27 +1688,42 @@ void analyse()
     
     tstack(activeMany2D, "CADIentriesMany", true);
     tstack(active2D, "CADIentries");
-    
+
+// here the first number in tstack is "bin" which is the activity()+1, it is analyzed in the code with text of category[bin-1]   
+// modified for tstack:  
+// inactive tstack(1
+// Published tstack(2
+// PAS-Only-PUB tstack(3
+// active tstack(4
+// Published+PAS-Only-PUB tstack(5
+// Published+PAS-Only-PUB+Active tstack(6
+
     tstack(4, activeMany2D, withUSauthors2D, withUS_LPCauthors2D, withUS_nonLPCauthors2D, "authActive",    "With Authors", "CADI entries");
     tstack(2, activeMany2D, withUSauthors2D, withUS_LPCauthors2D, withUS_nonLPCauthors2D, "authPublished", "With Authors", "CADI entries");
     tstack(3, activeMany2D, withUSauthors2D, withUS_LPCauthors2D, withUS_nonLPCauthors2D, "authPasOnly",   "With Authors", "CADI entries");
 // true here means these plots get printed to the html    
     tstack(4, activeMany2D, withUSauthors2D, withUS_LPCnewauthors2D, withUS_nonLPCnewauthors2D, "authActiveNew",    "With Authors", "CADI entries", true);
     tstack(2, activeMany2D, withUSauthors2D, withUS_LPCnewauthors2D, withUS_nonLPCnewauthors2D, "authPublishedNew", "With Authors", "CADI entries", true);
-    tstack(3, activeMany2D, withUSauthors2D, withUS_LPCnewauthors2D, withUS_nonLPCnewauthors2D, "authPasOnlyNew",   "With Authors", "CADI entries");
+    tstack(3, activeMany2D, withUSauthors2D, withUS_LPCnewauthors2D, withUS_nonLPCnewauthors2D, "authPasOnlyNew",   "With Authors", "CADI entries",true);
     combine(activeMany2D, withUSauthors2D, withUS_LPCnewauthors2D, withUS_nonLPCnewauthors2D, "auth_Active-PasOnly-Published_New", "With Authors", "CADI entries");
+    tstack(5, activeMany2D, withUSauthors2D, withUS_LPCnewauthors2D, withUS_nonLPCnewauthors2D, "authPublished+PAS-Only-PUBNew",    "With Authors", "CADI entries", true);
+    tstack(6, activeMany2D, withUSauthors2D, withUS_LPCnewauthors2D, withUS_nonLPCnewauthors2D, "authPublished+PAS-Only-PUB+ActiveNew", "With Authors", "CADI entries", true);
     
     tstack(4, activeMany2D, majUSauthors2D, majUS_LPCauthors2D, majUS_nonLPCauthors2D, "majAuthActive",    "Majority of authors","CADI entries");
     tstack(2, activeMany2D, majUSauthors2D, majUS_LPCauthors2D, majUS_nonLPCauthors2D, "majAuthPublished", "Majority of authors","CADI entries");
     tstack(3, activeMany2D, majUSauthors2D, majUS_LPCauthors2D, majUS_nonLPCauthors2D, "majAuthPasOnly",   "Majority of authors","CADI entries");
 
-    tstack(4, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthActive",    "Significant number of authors","CADI entries");
-    tstack(2, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublished", "Significant number of authors","CADI entries");
-    tstack(3, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPasOnly",   "Significant number of authors","CADI entries");
-    
-    tstack(4, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthActiveNew",    "Majority of authors","CADI entries");
-    tstack(2, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthPublishedNew", "Majority of authors","CADI entries");
-    tstack(3, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthPasOnlyNew",   "Majority of authors","CADI entries");
+    tstack(4, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthActive",    "Significant number of authors","CADI entries",true);
+    tstack(2, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublished", "Significant number of authors","CADI entries",true);
+    tstack(3, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPasOnly",   "Significant number of authors","CADI entries",true);
+    tstack(5, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublished+PAS-Only-PUB", "Significant number of authors","CADI entries",true);
+    tstack(6, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublished+PAS-Only-PUB+ActiveNew",   "Significant number of authors","CADI entries",true);
+        
+    tstack(4, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthActiveNew",    "Majority of authors","CADI entries",true);
+    tstack(2, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthPublishedNew", "Majority of authors","CADI entries",true);
+    tstack(3, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthPasOnlyNew",   "Majority of authors","CADI entries",true);
+    tstack(5, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthPublished+PAS-Only-PUBNew", "Majority of authors","CADI entries",true);
+    tstack(6, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthPublished+PAS-Only-PUB+ActiveNew",   "Majority of authors","CADI entries",true);
     //     std::cout << "active2D "<<active2D[j]->GetEntries()<<endl;
 
     tstack(4, activeMany2D, MymajUSauthors2D, MymajUS_LPCnewauthors2D, MymajUS_nonLPCnewauthors2D, "TonjesMajAuthActiveNew_USgteq50",    "Majority of authors","CADI entries");
@@ -1754,24 +1739,24 @@ void analyse()
     tstack(2, active2D, arcUS2D ,arcLPC2D, arcnonLPC2D, "arcMemberPublished", "With ARC members","CADI entries");
     tstack(3, active2D, arcUS2D ,arcLPC2D, arcnonLPC2D, "arcMemberPasOnly", "With ARC members","CADI entries");
     
-    tstack(4, active2D, chairUS2D ,chairLPCnew2D, chairnonLPCnew2D, "arcChairActiveNew", "ARC chairs","CADI entries", true);
-    tstack(2, active2D, chairUS2D ,chairLPCnew2D, chairnonLPCnew2D, "arcChairPublishedNew", "ARC chairs","CADI entries", true);
+    tstack(4, active2D, chairUS2D ,chairLPCnew2D, chairnonLPCnew2D, "arcChairActiveNew", "ARC chairs","CADI entries");
+    tstack(2, active2D, chairUS2D ,chairLPCnew2D, chairnonLPCnew2D, "arcChairPublishedNew", "ARC chairs","CADI entries");
     tstack(3, active2D, chairUS2D ,chairLPCnew2D, chairnonLPCnew2D, "arcChairPasOnlyNew", "ARC chairs","CADI entries");
     
     tstack(4, active2D, arcUS2D ,arcLPCnew2D, arcnonLPCnew2D, "arcMemberActiveNew", "With ARC members","CADI entries");
     tstack(2, active2D, arcUS2D ,arcLPCnew2D, arcnonLPCnew2D, "arcMemberPublishedNew", "With ARC members","CADI entries");
     tstack(3, active2D, arcUS2D ,arcLPCnew2D, arcnonLPCnew2D, "arcMemberPasOnlyNew", "With ARC members","CADI entries");
     
-    tstack(4, active2D, arcCMUS2D ,arcCMLPCnew2D, arcCMnonLPCnew2D, "arcMemberChairActiveNew", "With ARC members","CADI entries", true);
-    tstack(2, active2D, arcCMUS2D ,arcCMLPCnew2D, arcCMnonLPCnew2D, "arcMemberChairPublishedNew", "With ARC members","CADI entries", true);
+    tstack(4, active2D, arcCMUS2D ,arcCMLPCnew2D, arcCMnonLPCnew2D, "arcMemberChairActiveNew", "With ARC members","CADI entries");
+    tstack(2, active2D, arcCMUS2D ,arcCMLPCnew2D, arcCMnonLPCnew2D, "arcMemberChairPublishedNew", "With ARC members","CADI entries");
     tstack(3, active2D, arcCMUS2D ,arcCMLPCnew2D, arcCMnonLPCnew2D, "arcMemberChairPasOnlyNew", "With ARC members","CADI entries");
     
     tstack(4, active2D, contactUS2D , contactLPC2D, contactnonLPC2D, "cadiContactActive", "CADI contacts","CADI entries");
     tstack(2, active2D, contactUS2D , contactLPC2D, contactnonLPC2D, "cadiContactPublished", "CADI contacts","CADI entries");
     tstack(3, active2D, contactUS2D , contactLPC2D, contactnonLPC2D, "cadiContactPasOnly", "CADI contacts","CADI entries");
     
-    tstack(4, active2D, contactUS2D , contactLPCnew2D, contactnonLPCnew2D, "cadiContactActiveNew", "CADI contacts","CADI entries", true);
-    tstack(2, active2D, contactUS2D , contactLPCnew2D, contactnonLPCnew2D, "cadiContactPublishedNew", "CADI contacts","CADI entries", true);
+    tstack(4, active2D, contactUS2D , contactLPCnew2D, contactnonLPCnew2D, "cadiContactActiveNew", "CADI contacts","CADI entries");
+    tstack(2, active2D, contactUS2D , contactLPCnew2D, contactnonLPCnew2D, "cadiContactPublishedNew", "CADI contacts","CADI entries");
     tstack(3, active2D, contactUS2D , contactLPCnew2D, contactnonLPCnew2D, "cadiContactPasOnlyNew", "CADI contacts","CADI entries");
     
     tstack(4, totArc2D, totArcUS2D , totArcLPC2D, totArcnonLPC2D, "totArcActive", "Total ARC members", "ARC members");
@@ -1782,8 +1767,8 @@ void analyse()
     tstack(2, totArc2D, totArcUS2D , totArcLPCnew2D, totArcnonLPCnew2D, "totArcPublishedNew", "Total ARC members", "ARC members");
     tstack(3, totArc2D, totArcUS2D , totArcLPCnew2D, totArcnonLPCnew2D, "totArcPasOnlyNew", "Total ARC members", "ARC members");
     
-    tstack(4, totArcCM2D, totArcCMUS2D , totArcCMLPCnew2D, totArcCMnonLPCnew2D, "totArcCMActiveNew", "Total ARC members", "ARC members", true);
-    tstack(2, totArcCM2D, totArcCMUS2D , totArcCMLPCnew2D, totArcCMnonLPCnew2D, "totArcCMPublishedNew", "Total ARC members", "ARC members", true);
+    tstack(4, totArcCM2D, totArcCMUS2D , totArcCMLPCnew2D, totArcCMnonLPCnew2D, "totArcCMActiveNew", "Total ARC members", "ARC members");
+    tstack(2, totArcCM2D, totArcCMUS2D , totArcCMLPCnew2D, totArcCMnonLPCnew2D, "totArcCMPublishedNew", "Total ARC members", "ARC members");
     tstack(3, totArcCM2D, totArcCMUS2D , totArcCMLPCnew2D, totArcCMnonLPCnew2D, "totArcCMPasOnlyNew", "Total ARC members", "ARC members");
     
     //   allSt->Draw();
@@ -1793,7 +1778,7 @@ void analyse()
     
     
     TCanvas* canv3 = new TCanvas("canv3", "canv3", 600, 600);
-    for (int j=0;j<6;++j) {
+    for (int j=0;j<4;++j) {
         // No stats box
         gStyle->SetOptStat(0);
         // No title
@@ -1894,7 +1879,7 @@ void analyse()
     TCanvas* canv2 = new TCanvas("canv2", "canv2", 750, 300);
     canv2->Divide(3,1) ;
     
-    for (int j=0;j<6;++j) {
+    for (int j=0;j<4;++j) {
         canv2->cd(1);
         fracUS[j]->GetXaxis()->SetTitle("Fraction of authors from USA");
         fracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
@@ -1941,7 +1926,7 @@ void analyse()
     delete canv;
     canv = new TCanvas("canv", "canv", 600, 600);
     
-    for (int j=0;j<6;++j) {
+    for (int j=0;j<4;++j) {
         fracUS[j]->GetXaxis()->SetTitle("Fraction of authors from USA");
         fracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
         fracUS[j]->Draw();
@@ -1968,7 +1953,7 @@ void analyse()
         
     }
     /////////////////////////////////
-    for (int j=0;j<6;++j) {
+    for (int j=0;j<4;++j) {
         canv2->cd(1);
         arcFracUS[j]->GetXaxis()->SetTitle("Fraction of ARC from USA");
         arcFracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
@@ -2014,7 +1999,7 @@ void analyse()
     delete canv;
     canv = new TCanvas("canv", "canv", 600, 600);
     
-    for (int j=0;j<6;++j) {
+    for (int j=0;j<4;++j) {
         arcFracUS[j]->GetXaxis()->SetTitle("Fraction of ARC from USA");
         arcFracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
         arcFracUS[j]->Draw();
@@ -2032,7 +2017,7 @@ void analyse()
         canv->Print(hname);
     }
     
-    for (int cat=0;cat<6;++cat) {
+    for (int cat=0;cat<4;++cat) {
         std::cout << "Category "<<cat<<endl;
         std::cout << "PAG & \tTotal & \tAuth US & \tLPCnew & \tnon-LPCnew & \t";
         std::cout << "Majr US & \tLPCnew & \tnon-LPCnew & \t";
