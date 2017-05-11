@@ -23,8 +23,9 @@ std::ofstream theTableHTML("ztable.html");
 std::ofstream theCADIcsv("zLPCMajorityCADI.csv");
 
 TCanvas* canv ;
-static const char category[4][20] ={"Inactive", "Published", "PAS-Only PUB", "Active"};
-static const char categorySum[2][30]={"Published+PAS-Only-PUB", "Published+PAS-Only-PUB+Active"};
+static const char category[6][30] ={"Inactive", "Published", "PAS-Only PUB", "Active", "Published_PAS", "Published_PAS_Active"};
+//static const char category[4][20] ={"Inactive", "Published", "PAS-Only PUB", "Active"};
+//static const char categorySum[2][30]={"Published+PAS-Only-PUB", "Published+PAS-Only-PUB+Active"};
 // inactive 0
 // Published 1
 // PAS-Only-PUB 2
@@ -529,7 +530,52 @@ public:
    // this will work to fill out more options in active or not (only PRE-APP) and get the same result     
         return 3;
     }
-    
+// Published+PAS-Only-PUB 4
+int activitySum(){
+  if ((activity()==1) || (activity()==2)){ return 4; }
+  return 0;
+}
+// Published+PAS-Only-PUB+Active 5
+int activitySumAll(){ 
+  if ((activity()==1) || (activity()==2) || (activity()==3)){ return 5; }
+  return 0;
+}
+// activitySum()
+// Published+PAS-Only-PUB 0
+// Published+PAS-Only-PUB+Active 1
+//    int activitySum(){
+//  // Published+PAS-Only-PUB 4       
+//         if ((status.compare(0, 6,  "ACCEPT") == 0) ||
+//             (status.compare(0, 3,  "PUB") == 0) ||
+//             (status.compare(0, 11, "ReadyForSub") == 0) ||
+//             (status.compare(0, 11, "RefComments") == 0) ||
+//             (status.compare(0, 11, "ReSubmitted") == 0) ||
+//             (status.compare(0, 5,  "ReSub") == 0) ||
+//             (status.compare(0, 3,  "SUB") == 0) ||
+//             (status.compare(0, 12, "PAS-only-PUB") == 0) 
+//            ) return 4;
+//   // Published+PAS-Only-PUB+Active 5   
+//   // presuming Active above contains all the possible statuses then sum will equal sum of plots. 
+//   // If it doesn't, you're missing a CADI status from Active and below. 
+//         if ((status.compare(0, 6,  "ACCEPT") == 0) ||
+//             (status.compare(0, 3,  "PUB") == 0) ||
+//             (status.compare(0, 11, "ReadyForSub") == 0) ||
+//             (status.compare(0, 11, "RefComments") == 0) ||
+//             (status.compare(0, 11, "ReSubmitted") == 0) ||
+//             (status.compare(0, 5,  "ReSub") == 0) ||
+//             (status.compare(0, 3,  "SUB") == 0) ||
+//             (status.compare(0, 12, "PAS-only-PUB") == 0)  ||
+//             (status.compare(0, 14, "ARC-GreenLight") == 0) ||
+//             (status.compare(0, 3, "CWR") == 0) ||
+//             (status.compare(0, 9, "CWR-ended") == 0) ||
+//             (status.compare(0, 12, "FinalReading") == 0) ||
+//             (status.compare(0, 7, "PRE-APP") == 0) ||
+//             (status.compare(0, 10, "ReadyForLE") == 0) ||
+//             (status.compare(0, 9, "PUB-Draft") == 0)          
+//            ) return 5;   
+//      return 5;
+//    }
+
     int TonjesPrint(){
        float LPC_frac = 0;
        if (anAuthUSA==0){
@@ -651,7 +697,7 @@ TH1F* prepareHisto(string a, const vector<string> & list = PAG)
 
 TH2F* prepareHisto2D(string a, const vector<string> & list = PAG)
 {
-    TH2F* histo = new TH2F(a.c_str(),a.c_str(),list.size(),0.,list.size(), 4, -0.5, 3.5);
+    TH2F* histo = new TH2F(a.c_str(),a.c_str(),list.size(),0.,list.size(), 6, -0.5, 5.5);
     for (unsigned int j = 0;j<list.size();++j) {
         histo->GetXaxis()->SetBinLabel(j+1, list[j].c_str());
         //       active->Fill(groups[j].c_str(),1.0);
@@ -1233,7 +1279,7 @@ void analyse()
     vector<TH2F*> usVsLpcFrac, usVsLpcNbr,usVsLPCnewFrac, usVsLPCnewNbr;
     
     char hname[50], name[50];
-    for (int j = 0; j < 4; ++j) {
+    for (int j = 0; j < 6; ++j) {
         sprintf(hname, "nbrARC%i", j);
         sprintf(name, "Number of ARC members, category %i", j);
         nbrARC.push_back(new TH1F(hname, name,10,-0.5,9.5));
@@ -1638,8 +1684,244 @@ void analyse()
             if (entries[j].majorityUS_nonLPC()) majUS_nonLPCauthors ->Fill(entries[j].category().c_str(), 1.0);
         }
         
+// summed plots stuff
+// inactive 0
+// Published 1
+// PAS-Only-PUB 2
+// active 3
+       if(((entries[j].activity()==1) || (entries[j].activity()==2)) && (entries[j].activitySum()!=0) && (entries[j].activity()!=0)){
+        std::cout<<"activitySum: "<<entries[j].activitySum()<<std::endl;
+        nbrAuth[4]->Fill(entries[j].anAuth);
         
+        // Plot of fraction of US/LPC authors, for cadi with >1 authors
+        if (entries[j].anAuth>1)
+            fracUS[4]->Fill((float) entries[j].anAuthUSA/entries[j].anAuth);
+        if ((entries[j].anAuth>1) && (entries[j].anAuthUSA>0)) {
+            fracLPC[4]->Fill((float)entries[j].anAuthLPC/entries[j].anAuthUSA);
+            fracNonLPC[4]->Fill(1-((float)entries[j].anAuthLPC/entries[j].anAuthUSA));
+            usVsLpcFrac[4]->Fill((float) entries[j].anAuthUSA/entries[j].anAuth, (float)entries[j].anAuthLPC/entries[j].anAuthUSA);
+            usVsLpcNbr[4]->Fill(entries[j].anAuthUSA, (float)entries[j].anAuthLPC/entries[j].anAuthUSA);
+            
+            fracLPCnew[4]->Fill((float)entries[j].anAuthLPCnew/entries[j].anAuthUSA);
+            fracNonLPCnew[4]->Fill(1-((float)entries[j].anAuthLPCnew/entries[j].anAuthUSA));
+            usVsLPCnewFrac[4]->Fill((float) entries[j].anAuthUSA/entries[j].anAuth, (float)entries[j].anAuthLPCnew/entries[j].anAuthUSA);
+            //        if (entries[j].activity()==1){cout << "-"<<entries[j].code
+            // //        <<" "<<entries[j].status
+            // //        <<" "<<entries[j].category()
+            //        <<"\t"<<entries[j].anAuth<<"\t";
+            //        std::cout << entries[j].anAuthUSA//<<"\t"<<entries[j].cadiLPCnew
+            // //        <<"\t"<<entries[j].anAuthLPC
+            //        <<"\t"<<entries[j].anAuthLPCnew
+            //        <<"\t"<<((float)entries[j].anAuthUSA/entries[j].anAuth)
+            //        <<"\t"<<((float)entries[j].anAuthLPCnew/entries[j].anAuthUSA)
+            //        <<endl;}
+            usVsLPCnewNbr[4]->Fill(entries[j].anAuthUSA, (float)entries[j].anAuthLPCnew/entries[j].anAuthUSA);
+        }
         
+        // Plot of fraction of US/LPC arcs, for cadi with >1 authors
+        if (entries[j].arc>0)
+            arcFracUS[4]->Fill((float) entries[j].arcUSA/entries[j].arc);
+        if (entries[j].arc>0)
+            nbrARC[4]->Fill((float) entries[j].arc);
+        if ((entries[j].arc>0) && (entries[j].arcUSA>0)) {
+            arcFracLPC[4]->Fill((float)entries[j].arcLPC/entries[j].arcUSA);
+            arcFracNonLPC[4]->Fill(1-((float)entries[j].arcLPC/entries[j].arcUSA));
+            arcFracLPCnew[4]->Fill((float)entries[j].arcLPCnew/entries[j].arcUSA);
+            arcFracNonLPCnew[4]->Fill(1-((float)entries[j].arcLPCnew/entries[j].arcUSA));
+        }
+        
+        // 2D plots of authors
+        if (entries[j].activitySum()!=0) {
+            if (entries[j].anAuth<=0) active1auth2D->Fill(entries[j].category().c_str(), 4,1.0);
+            else {
+               // not filled if anAuth<0, try anAuth <=0 !
+                activeMany2D->Fill(entries[j].category().c_str(),4,1.0);
+                if (entries[j].isUS()) withUSauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].isUS_LPC()) withUS_LPCauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].isUS_nonLPC()) withUS_nonLPCauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].isUS_LPCnew()) withUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].isUS_nonLPCnew()) withUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+
+                if (entries[j].majorityUS()) {majUSauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                    // 	if (entries[j].category()=="FTR") std::cout << "Found : "<<entries[j].code<< " "<<entries[j].activity() << "	"<<majUSauthors2D->GetBinContent(7,3)<<endl;
+                }
+                if (entries[j].majorityUS_LPC()) majUS_LPCauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].majorityUS_nonLPC()) majUS_nonLPCauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].majorityUS_LPCnew()) majUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].majorityUS_nonLPCnew()) majUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+
+                if (entries[j].significantUS()) signifUSauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].significantUS_LPC()) signifUS_LPCauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].significantUS_nonLPC()) signifUS_nonLPCauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].significantUS_LPCnew()) signifUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].significantUS_nonLPCnew()) signifUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                
+                if (entries[j].MajAuthUS()) MymajUSauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].MajAuthNotUS()) MymajauthorsNonUS2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].MajAuthUSLPCnew()) MymajUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);
+                if (entries[j].MajAuthUS_notLPCnew()) MymajUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), 4, 1.0);  
+
+//                if (entries[j].NoAuth) CalcNOauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+//                if (entries[j].MyCalcAuthNotUS) CalcmajauthorsNonUS2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+//                if (entries[j].MyCalcAuthLPCnew) CalcmajUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+//                if (entries[j].MyCalcAuthUS_notLPCnew) CalcmajUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);  
+
+            }
+            
+//             active2D->Fill(entries[j].category().c_str(),4,1.0);
+//             if (entries[j].isChairUS()) chairUS2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].isChairUS_LPC()) chairLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].isChairUS_nonLPC()) chairnonLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].isChairUS_LPCnew()) chairLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].isChairUS_nonLPCnew()) chairnonLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             
+//             if (entries[j].isCadiUS()) contactUS2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].isCadiUS_LPC()) contactLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].isCadiUS_nonLPC()) contactnonLPC2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].isCadiUS_LPCnew()) contactLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].isCadiUS_nonLPCnew()) contactnonLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+// 
+//             if (entries[j].hasArcUS())              arcUS2D         ->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].hasArcUS_LPC())          arcLPC2D        ->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].hasArcUS_nonLPC())       arcnonLPC2D     ->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].hasArcUS_LPCnew())       arcLPCnew2D     ->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].hasArcUS_nonLPCnew())    arcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].hasAnyArcUS())           arcCMUS2D       ->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].hasAnyArcUS_LPCnew())    arcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 4, 1.0);
+//             if (entries[j].hasAnyArcUS_nonLPCnew()) arcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 4, 1.0);
+//             
+//             totArc2D           ->Fill(entries[j].category().c_str(), 4, entries[j].arc);
+//             totArcUS2D         ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA);
+//             totArcLPC2D        ->Fill(entries[j].category().c_str(), 4, entries[j].arcLPC);
+//             totArcnonLPC2D     ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA-entries[j].arcLPC);
+//             totArcLPCnew2D     ->Fill(entries[j].category().c_str(), 4, entries[j].arcLPCnew);
+//             totArcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA-entries[j].arcLPCnew);
+//             totArcCM2D         ->Fill(entries[j].category().c_str(), 4, entries[j].arc+1);
+//             totArcCMUS2D       ->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA+entries[j].arcChairUSA);
+//             totArcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 4, entries[j].arcLPCnew+entries[j].arcChairLPCnew);
+//             totArcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 4, entries[j].arcUSA
+//                                                                                             +entries[j].arcChairUSA
+//                                                                                             -entries[j].arcLPCnew
+//                                                                                             -entries[j].arcChairLPCnew);
+        } 
+     }    
+ // Sum of all
+       if(((entries[j].activity()==1) || (entries[j].activity()==2) || (entries[j].activity()==3)) && (entries[j].activitySumAll()!=0) && (entries[j].activity()!=0)){
+        std::cout<<"activitySumAll: "<<entries[j].activitySumAll()<<std::endl;
+        nbrAuth[5]->Fill(entries[j].anAuth);
+        
+        // Plot of fraction of US/LPC authors, for cadi with >1 authors
+        if (entries[j].anAuth>1)
+            fracUS[5]->Fill((float) entries[j].anAuthUSA/entries[j].anAuth);
+        if ((entries[j].anAuth>1) && (entries[j].anAuthUSA>0)) {
+            fracLPC[5]->Fill((float)entries[j].anAuthLPC/entries[j].anAuthUSA);
+            fracNonLPC[5]->Fill(1-((float)entries[j].anAuthLPC/entries[j].anAuthUSA));
+            usVsLpcFrac[5]->Fill((float) entries[j].anAuthUSA/entries[j].anAuth, (float)entries[j].anAuthLPC/entries[j].anAuthUSA);
+            usVsLpcNbr[5]->Fill(entries[j].anAuthUSA, (float)entries[j].anAuthLPC/entries[j].anAuthUSA);
+            
+            fracLPCnew[5]->Fill((float)entries[j].anAuthLPCnew/entries[j].anAuthUSA);
+            fracNonLPCnew[5]->Fill(1-((float)entries[j].anAuthLPCnew/entries[j].anAuthUSA));
+            usVsLPCnewFrac[5]->Fill((float) entries[j].anAuthUSA/entries[j].anAuth, (float)entries[j].anAuthLPCnew/entries[j].anAuthUSA);
+            //        if (entries[j].activity()==1){cout << "-"<<entries[j].code
+            // //        <<" "<<entries[j].status
+            // //        <<" "<<entries[j].category()
+            //        <<"\t"<<entries[j].anAuth<<"\t";
+            //        std::cout << entries[j].anAuthUSA//<<"\t"<<entries[j].cadiLPCnew
+            // //        <<"\t"<<entries[j].anAuthLPC
+            //        <<"\t"<<entries[j].anAuthLPCnew
+            //        <<"\t"<<((float)entries[j].anAuthUSA/entries[j].anAuth)
+            //        <<"\t"<<((float)entries[j].anAuthLPCnew/entries[j].anAuthUSA)
+            //        <<endl;}
+            usVsLPCnewNbr[5]->Fill(entries[j].anAuthUSA, (float)entries[j].anAuthLPCnew/entries[j].anAuthUSA);
+        }
+        
+        // Plot of fraction of US/LPC arcs, for cadi with >1 authors
+        if (entries[j].arc>0)
+            arcFracUS[5]->Fill((float) entries[j].arcUSA/entries[j].arc);
+        if (entries[j].arc>0)
+            nbrARC[5]->Fill((float) entries[j].arc);
+        if ((entries[j].arc>0) && (entries[j].arcUSA>0)) {
+            arcFracLPC[5]->Fill((float)entries[j].arcLPC/entries[j].arcUSA);
+            arcFracNonLPC[5]->Fill(1-((float)entries[j].arcLPC/entries[j].arcUSA));
+            arcFracLPCnew[5]->Fill((float)entries[j].arcLPCnew/entries[j].arcUSA);
+            arcFracNonLPCnew[5]->Fill(1-((float)entries[j].arcLPCnew/entries[j].arcUSA));
+        }
+        
+        // 2D plots of authors
+        if (entries[j].activitySumAll()!=0 ) {
+            if (entries[j].anAuth<=0) active1auth2D->Fill(entries[j].category().c_str(), 5,1.0);
+            else {
+               // not filled if anAuth<0, try anAuth <=0 !
+                activeMany2D->Fill(entries[j].category().c_str(),5,1.0);
+                if (entries[j].isUS()) withUSauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].isUS_LPC()) withUS_LPCauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].isUS_nonLPC()) withUS_nonLPCauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].isUS_LPCnew()) withUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].isUS_nonLPCnew()) withUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+
+                if (entries[j].majorityUS()) {majUSauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                    // 	if (entries[j].category()=="FTR") std::cout << "Found : "<<entries[j].code<< " "<<entries[j].activity() << "	"<<majUSauthors2D->GetBinContent(7,3)<<endl;
+                }
+                if (entries[j].majorityUS_LPC()) majUS_LPCauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].majorityUS_nonLPC()) majUS_nonLPCauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].majorityUS_LPCnew()) majUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].majorityUS_nonLPCnew()) majUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+
+                if (entries[j].significantUS()) signifUSauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].significantUS_LPC()) signifUS_LPCauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].significantUS_nonLPC()) signifUS_nonLPCauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].significantUS_LPCnew()) signifUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].significantUS_nonLPCnew()) signifUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                
+                if (entries[j].MajAuthUS()) MymajUSauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].MajAuthNotUS()) MymajauthorsNonUS2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].MajAuthUSLPCnew()) MymajUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);
+                if (entries[j].MajAuthUS_notLPCnew()) MymajUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), 5, 1.0);  
+
+//                if (entries[j].NoAuth) CalcNOauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+//                if (entries[j].MyCalcAuthNotUS) CalcmajauthorsNonUS2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+//                if (entries[j].MyCalcAuthLPCnew) CalcmajUS_LPCnewauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
+//                if (entries[j].MyCalcAuthUS_notLPCnew) CalcmajUS_nonLPCnewauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);  
+
+            }
+            
+//             active2D->Fill(entries[j].category().c_str(),5,1.0);
+//             if (entries[j].isChairUS()) chairUS2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].isChairUS_LPC()) chairLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].isChairUS_nonLPC()) chairnonLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].isChairUS_LPCnew()) chairLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].isChairUS_nonLPCnew()) chairnonLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             
+//             if (entries[j].isCadiUS()) contactUS2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].isCadiUS_LPC()) contactLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].isCadiUS_nonLPC()) contactnonLPC2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].isCadiUS_LPCnew()) contactLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].isCadiUS_nonLPCnew()) contactnonLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+// 
+//             if (entries[j].hasArcUS())              arcUS2D         ->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].hasArcUS_LPC())          arcLPC2D        ->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].hasArcUS_nonLPC())       arcnonLPC2D     ->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].hasArcUS_LPCnew())       arcLPCnew2D     ->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].hasArcUS_nonLPCnew())    arcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].hasAnyArcUS())           arcCMUS2D       ->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].hasAnyArcUS_LPCnew())    arcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 5, 1.0);
+//             if (entries[j].hasAnyArcUS_nonLPCnew()) arcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 5, 1.0);
+//             
+//             totArc2D           ->Fill(entries[j].category().c_str(), 5, entries[j].arc);
+//             totArcUS2D         ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA);
+//             totArcLPC2D        ->Fill(entries[j].category().c_str(), 5, entries[j].arcLPC);
+//             totArcnonLPC2D     ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA-entries[j].arcLPC);
+//             totArcLPCnew2D     ->Fill(entries[j].category().c_str(), 5, entries[j].arcLPCnew);
+//             totArcnonLPCnew2D  ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA-entries[j].arcLPCnew);
+//             totArcCM2D         ->Fill(entries[j].category().c_str(), 5, entries[j].arc+1);
+//             totArcCMUS2D       ->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA+entries[j].arcChairUSA);
+//             totArcCMLPCnew2D   ->Fill(entries[j].category().c_str(), 5, entries[j].arcLPCnew+entries[j].arcChairLPCnew);
+//             totArcCMnonLPCnew2D->Fill(entries[j].category().c_str(), 5, entries[j].arcUSA
+//                                                                                             +entries[j].arcChairUSA
+//                                                                                             -entries[j].arcLPCnew
+//                                                                                             -entries[j].arcChairLPCnew);
+        } 
+     }           
         //     if (entries[j].category("B2G") && entries[j].activity()==3 ){
         //       std::cout << j<<" "<<entries[j].code<<" "<<entries[j].status<<"- ";
         //       std::cout << entries[j].anAuth<<" "<<entries[j].anAuthUSA<<" "<<entries[j].isUS()<<" "<<entries[j].isUS_LPC()<<" "<<entries[j].isUS_nonLPC()
@@ -1778,7 +2060,7 @@ void analyse()
     
     
     TCanvas* canv3 = new TCanvas("canv3", "canv3", 600, 600);
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         // No stats box
         gStyle->SetOptStat(0);
         // No title
@@ -1879,7 +2161,7 @@ void analyse()
     TCanvas* canv2 = new TCanvas("canv2", "canv2", 750, 300);
     canv2->Divide(3,1) ;
     
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         canv2->cd(1);
         fracUS[j]->GetXaxis()->SetTitle("Fraction of authors from USA");
         fracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
@@ -1926,7 +2208,7 @@ void analyse()
     delete canv;
     canv = new TCanvas("canv", "canv", 600, 600);
     
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         fracUS[j]->GetXaxis()->SetTitle("Fraction of authors from USA");
         fracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
         fracUS[j]->Draw();
@@ -1953,7 +2235,7 @@ void analyse()
         
     }
     /////////////////////////////////
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         canv2->cd(1);
         arcFracUS[j]->GetXaxis()->SetTitle("Fraction of ARC from USA");
         arcFracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
@@ -1999,7 +2281,7 @@ void analyse()
     delete canv;
     canv = new TCanvas("canv", "canv", 600, 600);
     
-    for (int j=0;j<4;++j) {
+    for (int j=0;j<6;++j) {
         arcFracUS[j]->GetXaxis()->SetTitle("Fraction of ARC from USA");
         arcFracUS[j]->GetYaxis()->SetTitleOffset(1.15) ;
         arcFracUS[j]->Draw();
@@ -2017,7 +2299,7 @@ void analyse()
         canv->Print(hname);
     }
     
-    for (int cat=0;cat<4;++cat) {
+    for (int cat=0;cat<6;++cat) {
         std::cout << "Category "<<cat<<endl;
         std::cout << "PAG & \tTotal & \tAuth US & \tLPCnew & \tnon-LPCnew & \t";
         std::cout << "Majr US & \tLPCnew & \tnon-LPCnew & \t";
