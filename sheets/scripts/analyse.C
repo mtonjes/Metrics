@@ -815,6 +815,272 @@ THStack* DRstack(TH2* histo, string nameOfFile, bool print=false, TString axis="
     return mystack;
     
 }
+THStack* cat1stack(TH2* histo, string nameOfFile, bool print=false, TString axis="CADI entries")
+{
+    std::string name = "";
+    histo->LabelsDeflate("X");
+    THStack* mystack = new THStack(name.c_str(),name.c_str());
+    
+    TH1D* pub = histo->ProjectionX("a", 2, 2);
+    pub->SetFillColor(kBlue+1);
+    mystack->Add(pub);
+    TH1D* pas = histo->ProjectionX("b", 3, 3);
+    pas->SetFillColor(kRed+2);
+    mystack->Add(pas);
+    TH1D* act = histo->ProjectionX("c", 4, 4);
+    act->SetFillColor(kCyan+2);
+    mystack->Add(act);
+    //   mystack->LabelsOption("v", "X");
+    if (print) {
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        std::cout << nameOfFile << std::endl;
+        std::cout << "Published: " << pub->GetEntries() << std::endl;
+//        std::cout << "PAS-only- PUB: " << pas->GetEntries() << std::endl;
+//        std::cout << "Active: " << act->GetEntries() << std::endl;
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        theTableHTML << "<tr><td><a href='" << nameOfFile << ".png'><img src='" << nameOfFile << ".png' height='200' alt='" << nameOfFile << ".png'></a><br></td>" << std::endl;
+        theTableHTML << "<td>" << nameOfFile << "<br>" << std::endl;
+        theTableHTML << "Published: " << pub->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "PAS-only- PUB: " << pas->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "Active: " << act->GetEntries() << "</td></tr>" << std::endl;
+    }
+
+    TLegend *leg = new TLegend(0.15, 0.775, 0.4, 0.875, "","brNDC");
+//    TLegend * leg = new TLegend(0.6, 0.725, 0.88, 0.875, "","brNDC");
+    leg->SetFillColor(10);
+    leg->SetTextSize(0.03);
+    leg->SetTextFont(42);
+    leg->SetBorderSize(0);
+    leg->SetFillStyle(0);
+    leg->SetLineStyle(0);
+    leg->AddEntry(pub, "Published", "f");
+//    leg->AddEntry(pas, "PAS-Only Pub", "f");
+//    leg->AddEntry(act, "Active", "f");
+    mystack->Draw();
+    leg->Draw();
+    mystack->GetXaxis()->SetRangeUser(0,PAG.size());
+    title = TString("Number of ")+axis;
+    mystack->GetYaxis()->SetTitle(title);
+    mystack->GetYaxis()->SetTitleOffset(1.3) ;    
+    mystack->SetMaximum(mystack->GetMaximum()*1.25);
+    canv->SaveAs((nameOfFile+".png").c_str());
+    canv->SaveAs(("zcode/"+nameOfFile+".C").c_str());
+    return mystack;
+    
+}
+
+THStack* cat2stack(TH2* histo, string nameOfFile, bool print=false, TString axis="CADI entries")
+{
+    std::string name = "";
+    histo->LabelsDeflate("X");
+    THStack* mystack = new THStack(name.c_str(),name.c_str());
+    
+    TH1D* pub = histo->ProjectionX("a", 2, 2);
+    pub->SetFillColor(kBlue+1);
+    mystack->Add(pub);
+    TH1D* pas = histo->ProjectionX("b", 3, 3);
+    pas->SetFillColor(kRed+2);
+    mystack->Add(pas);
+    TH1D* act = histo->ProjectionX("c", 4, 4);
+    act->SetFillColor(kCyan+2);
+    mystack->Add(act);
+    //   mystack->LabelsOption("v", "X");
+    if (print) {
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        std::cout << nameOfFile << std::endl;
+        std::cout << "PAS-Only: " << pub->GetEntries() << std::endl;
+//        std::cout << "PAS-only- PUB: " << pas->GetEntries() << std::endl;
+//        std::cout << "Active: " << act->GetEntries() << std::endl;
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        theTableHTML << "<tr><td><a href='" << nameOfFile << ".png'><img src='" << nameOfFile << ".png' height='200' alt='" << nameOfFile << ".png'></a><br></td>" << std::endl;
+        theTableHTML << "<td>" << nameOfFile << "<br>" << std::endl;
+        theTableHTML << "PAS-Only: " << pub->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "PAS-only- PUB: " << pas->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "Active: " << act->GetEntries() << "</td></tr>" << std::endl;
+    }
+
+    TLegend *leg = new TLegend(0.15, 0.775, 0.4, 0.875, "","brNDC");
+//    TLegend * leg = new TLegend(0.6, 0.725, 0.88, 0.875, "","brNDC");
+    leg->SetFillColor(10);
+    leg->SetTextSize(0.03);
+    leg->SetTextFont(42);
+    leg->SetBorderSize(0);
+    leg->SetFillStyle(0);
+    leg->SetLineStyle(0);
+    leg->AddEntry(pub, "PAS-Only", "f");
+//    leg->AddEntry(pas, "PAS-Only Pub", "f");
+//    leg->AddEntry(act, "Active", "f");
+    mystack->Draw();
+    leg->Draw();
+    mystack->GetXaxis()->SetRangeUser(0,PAG.size());
+    title = TString("Number of ")+axis;
+    mystack->GetYaxis()->SetTitle(title);
+    mystack->GetYaxis()->SetTitleOffset(1.3) ;    
+    mystack->SetMaximum(mystack->GetMaximum()*1.25);
+    canv->SaveAs((nameOfFile+".png").c_str());
+    canv->SaveAs(("zcode/"+nameOfFile+".C").c_str());
+    return mystack;
+    
+}
+THStack* cat3stack(TH2* histo, string nameOfFile, bool print=false, TString axis="CADI entries")
+{
+    std::string name = "";
+    histo->LabelsDeflate("X");
+    THStack* mystack = new THStack(name.c_str(),name.c_str());
+    
+    TH1D* pub = histo->ProjectionX("a", 2, 2);
+    pub->SetFillColor(kBlue+1);
+    mystack->Add(pub);
+    TH1D* pas = histo->ProjectionX("b", 3, 3);
+    pas->SetFillColor(kRed+2);
+    mystack->Add(pas);
+    TH1D* act = histo->ProjectionX("c", 4, 4);
+    act->SetFillColor(kCyan+2);
+    mystack->Add(act);
+    //   mystack->LabelsOption("v", "X");
+    if (print) {
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        std::cout << nameOfFile << std::endl;
+        std::cout << "Active: " << pub->GetEntries() << std::endl;
+//        std::cout << "Active- PUB: " << pas->GetEntries() << std::endl;
+//        std::cout << "Active: " << act->GetEntries() << std::endl;
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        theTableHTML << "<tr><td><a href='" << nameOfFile << ".png'><img src='" << nameOfFile << ".png' height='200' alt='" << nameOfFile << ".png'></a><br></td>" << std::endl;
+        theTableHTML << "<td>" << nameOfFile << "<br>" << std::endl;
+        theTableHTML << "Active: " << pub->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "Active- PUB: " << pas->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "Active: " << act->GetEntries() << "</td></tr>" << std::endl;
+    }
+
+    TLegend *leg = new TLegend(0.15, 0.775, 0.4, 0.875, "","brNDC");
+//    TLegend * leg = new TLegend(0.6, 0.725, 0.88, 0.875, "","brNDC");
+    leg->SetFillColor(10);
+    leg->SetTextSize(0.03);
+    leg->SetTextFont(42);
+    leg->SetBorderSize(0);
+    leg->SetFillStyle(0);
+    leg->SetLineStyle(0);
+    leg->AddEntry(pub, "Active", "f");
+//    leg->AddEntry(pas, "Active Pub", "f");
+//    leg->AddEntry(act, "Active", "f");
+    mystack->Draw();
+    leg->Draw();
+    mystack->GetXaxis()->SetRangeUser(0,PAG.size());
+    title = TString("Number of ")+axis;
+    mystack->GetYaxis()->SetTitle(title);
+    mystack->GetYaxis()->SetTitleOffset(1.3) ;    
+    mystack->SetMaximum(mystack->GetMaximum()*1.25);
+    canv->SaveAs((nameOfFile+".png").c_str());
+    canv->SaveAs(("zcode/"+nameOfFile+".C").c_str());
+    return mystack;
+    
+}
+THStack* cat4stack(TH2* histo, string nameOfFile, bool print=false, TString axis="CADI entries")
+{
+    std::string name = "";
+    histo->LabelsDeflate("X");
+    THStack* mystack = new THStack(name.c_str(),name.c_str());
+    
+    TH1D* pub = histo->ProjectionX("a", 2, 2);
+    pub->SetFillColor(kBlue+1);
+    mystack->Add(pub);
+    TH1D* pas = histo->ProjectionX("b", 3, 3);
+    pas->SetFillColor(kRed+2);
+    mystack->Add(pas);
+    TH1D* act = histo->ProjectionX("c", 4, 4);
+    act->SetFillColor(kCyan+2);
+    mystack->Add(act);
+    //   mystack->LabelsOption("v", "X");
+    if (print) {
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        std::cout << nameOfFile << std::endl;
+        std::cout << "Published+PAS: " << pub->GetEntries() << std::endl;
+//        std::cout << "Published+PAS- PUB: " << pas->GetEntries() << std::endl;
+//        std::cout << "Published+PAS: " << act->GetEntries() << std::endl;
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        theTableHTML << "<tr><td><a href='" << nameOfFile << ".png'><img src='" << nameOfFile << ".png' height='200' alt='" << nameOfFile << ".png'></a><br></td>" << std::endl;
+        theTableHTML << "<td>" << nameOfFile << "<br>" << std::endl;
+        theTableHTML << "Published+PAS: " << pub->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "Published+PAS- PUB: " << pas->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "Published+PAS: " << act->GetEntries() << "</td></tr>" << std::endl;
+    }
+
+    TLegend *leg = new TLegend(0.15, 0.775, 0.4, 0.875, "","brNDC");
+//    TLegend * leg = new TLegend(0.6, 0.725, 0.88, 0.875, "","brNDC");
+    leg->SetFillColor(10);
+    leg->SetTextSize(0.03);
+    leg->SetTextFont(42);
+    leg->SetBorderSize(0);
+    leg->SetFillStyle(0);
+    leg->SetLineStyle(0);
+    leg->AddEntry(pub, "Published+PAS", "f");
+//    leg->AddEntry(pas, "Published+PAS Pub", "f");
+//    leg->AddEntry(act, "Published+PAS", "f");
+    mystack->Draw();
+    leg->Draw();
+    mystack->GetXaxis()->SetRangeUser(0,PAG.size());
+    title = TString("Number of ")+axis;
+    mystack->GetYaxis()->SetTitle(title);
+    mystack->GetYaxis()->SetTitleOffset(1.3) ;    
+    mystack->SetMaximum(mystack->GetMaximum()*1.25);
+    canv->SaveAs((nameOfFile+".png").c_str());
+    canv->SaveAs(("zcode/"+nameOfFile+".C").c_str());
+    return mystack;
+    
+}
+THStack* cat5stack(TH2* histo, string nameOfFile, bool print=false, TString axis="CADI entries")
+{
+    std::string name = "";
+    histo->LabelsDeflate("X");
+    THStack* mystack = new THStack(name.c_str(),name.c_str());
+    
+    TH1D* pub = histo->ProjectionX("a", 2, 2);
+    pub->SetFillColor(kBlue+1);
+    mystack->Add(pub);
+    TH1D* pas = histo->ProjectionX("b", 3, 3);
+    pas->SetFillColor(kRed+2);
+    mystack->Add(pas);
+    TH1D* act = histo->ProjectionX("c", 4, 4);
+    act->SetFillColor(kCyan+2);
+    mystack->Add(act);
+    //   mystack->LabelsOption("v", "X");
+    if (print) {
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        std::cout << nameOfFile << std::endl;
+        std::cout << "Published+PAS+Active: " << pub->GetEntries() << std::endl;
+//        std::cout << "Published+PAS+Active- PUB: " << pas->GetEntries() << std::endl;
+//        std::cout << "Published+PAS+Active: " << act->GetEntries() << std::endl;
+        std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+        theTableHTML << "<tr><td><a href='" << nameOfFile << ".png'><img src='" << nameOfFile << ".png' height='200' alt='" << nameOfFile << ".png'></a><br></td>" << std::endl;
+        theTableHTML << "<td>" << nameOfFile << "<br>" << std::endl;
+        theTableHTML << "Published+PAS+Active: " << pub->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "Published+PAS+Active- PUB: " << pas->GetEntries() << "<br>" << std::endl;
+ //       theTableHTML << "Published+PAS+Active: " << act->GetEntries() << "</td></tr>" << std::endl;
+    }
+
+    TLegend *leg = new TLegend(0.15, 0.775, 0.4, 0.875, "","brNDC");
+//    TLegend * leg = new TLegend(0.6, 0.725, 0.88, 0.875, "","brNDC");
+    leg->SetFillColor(10);
+    leg->SetTextSize(0.03);
+    leg->SetTextFont(42);
+    leg->SetBorderSize(0);
+    leg->SetFillStyle(0);
+    leg->SetLineStyle(0);
+    leg->AddEntry(pub, "Published+PAS+Active", "f");
+//    leg->AddEntry(pas, "Published+PAS+Active Pub", "f");
+//    leg->AddEntry(act, "Published+PAS+Active", "f");
+    mystack->Draw();
+    leg->Draw();
+    mystack->GetXaxis()->SetRangeUser(0,PAG.size());
+    title = TString("Number of ")+axis;
+    mystack->GetYaxis()->SetTitle(title);
+    mystack->GetYaxis()->SetTitleOffset(1.3) ;    
+    mystack->SetMaximum(mystack->GetMaximum()*1.25);
+    canv->SaveAs((nameOfFile+".png").c_str());
+    canv->SaveAs(("zcode/"+nameOfFile+".C").c_str());
+    return mystack;
+    
+}
 
 THStack* combine(TH2* histo, TH2F* US, TH2F* US_LPC, TH2F* US_nonLP, string nameOfFile, string auth, string yAxis = "")
 {
@@ -1219,6 +1485,18 @@ void analyse()
     TH2F* withUS_LPCARCChairScholars2D = prepareHisto2D("LPCARCChairscholars");
     TH2F* withUS_LPCARCScholars2D = prepareHisto2D("nLPCARCscholars");
     TH2F* withUS_LPCNumARCScholars2D = prepareHisto2D("nLPCNumARCscholars");
+ 
+// more scholars plots
+    TH2F* withUS_LPCScholarsActive2D = prepareHisto2D("LPCscholarsActive");
+    TH2F* withUS_LPCNumScholarsActive2D = prepareHisto2D("nLPCscholarsActive");
+    TH2F* withUS_LPCScholarsPublished2D = prepareHisto2D("LPCscholarsPublished");
+    TH2F* withUS_LPCNumScholarsPublished2D = prepareHisto2D("nLPCscholarsPublished");
+    TH2F* withUS_LPCScholarsPASOnly2D = prepareHisto2D("LPCscholarsPASOnly");
+    TH2F* withUS_LPCNumScholarsPASOnly2D = prepareHisto2D("nLPCscholarsPASOnly");    
+    TH2F* withUS_LPCScholarsPublished_PAS2D = prepareHisto2D("LPCscholarsPublished_PAS");
+    TH2F* withUS_LPCNumScholarsPublished_PAS2D = prepareHisto2D("nLPCscholarsPublished_PAS");
+    TH2F* withUS_LPCScholarsPublished_PAS_Active2D = prepareHisto2D("LPCscholarsPublished_PAS_Active");
+    TH2F* withUS_LPCNumScholarsPublished_PAS_Active2D = prepareHisto2D("nLPCscholarsPublished_PAS_Active"); 
     
     TH2F* majUSauthors2D = prepareHisto2D("majUSauthors2D");
     TH2F* majUS_LPCauthors2D = prepareHisto2D("majUS_LPCauthors2D");
@@ -1450,6 +1728,29 @@ void analyse()
                 if (entries[j].LPCARCChairscholars() > 0 && (entries[j].activity() == 2 || entries[j].activity() == 1)) {
                     withUS_LPCARCChairScholars2D->Fill(entries[j].category().c_str(), 1, 1);
                 }
+// more scholars plots
+                if (entries[j].LPCscholars() > 0 && (entries[j].activity() == 1)) {
+                    withUS_LPCNumScholarsPublished2D->Fill(entries[j].category().c_str(), 1, entries[j].LPCscholars());
+                    withUS_LPCScholarsPublished2D->Fill(entries[j].category().c_str(), 1, 1);
+                }    
+                
+                 if ((entries[j].LPCscholars() > 0) && (entries[j].activity() == 2)) {
+                    withUS_LPCNumScholarsPASOnly2D->Fill(entries[j].category().c_str(), 1, entries[j].LPCscholars());
+                    withUS_LPCScholarsPASOnly2D->Fill(entries[j].category().c_str(), 1, 1);
+                }                   
+                 if ((entries[j].LPCscholars() > 0) && (entries[j].activity() == 3)) {
+                    withUS_LPCNumScholarsActive2D->Fill(entries[j].category().c_str(), 1, entries[j].LPCscholars());
+                    withUS_LPCScholarsActive2D->Fill(entries[j].category().c_str(), 1, 1);
+                }                        
+                  if ((entries[j].LPCscholars() > 0) && ( (entries[j].activity() == 1) || (entries[j].activity() == 2) )) {
+                    withUS_LPCNumScholarsPublished_PAS2D->Fill(entries[j].category().c_str(), 1, entries[j].LPCscholars());
+                    withUS_LPCScholarsPublished_PAS2D->Fill(entries[j].category().c_str(), 1, 1);
+                }                     
+                  if ((entries[j].LPCscholars() > 0) && ((entries[j].activity() == 1)||(entries[j].activity() == 2) || (entries[j].activity() == 3))) {
+                    withUS_LPCNumScholarsPublished_PAS_Active2D->Fill(entries[j].category().c_str(), 1, entries[j].LPCscholars());
+                    withUS_LPCScholarsPublished_PAS_Active2D->Fill(entries[j].category().c_str(), 1, 1);
+                }    
+//                
                 if (entries[j].majorityUS()) {majUSauthors2D->Fill(entries[j].category().c_str(), entries[j].activity(), 1.0);
                     // 	if (entries[j].category()=="FTR") std::cout << "Found : "<<entries[j].code<< " "<<entries[j].activity() << "	"<<majUSauthors2D->GetBinContent(7,3)<<endl;
                 }
@@ -1963,11 +2264,22 @@ void analyse()
     //   active2D
     //   THStack* allSt = stack(active2D, "allStack");
     
-    DRstack(withUS_LPCScholars2D, "LPCscholars", true);
-    DRstack(withUS_LPCNumScholars2D, "nLPCscholars", true, "LPC DRs as authors");
-    DRstack(withUS_LPCARCChairScholars2D, "LPCChairscholars", true, "LPC DRs as ARC chairs");
-    DRstack(withUS_LPCARCScholars2D, "LPCARCscholars", true, "CADI entries");
-    DRstack(withUS_LPCNumARCScholars2D, "nLPCNumARCscholars", true, "LPC DRs as ARC members");
+    DRstack(withUS_LPCScholars2D, "LPCscholars");
+    DRstack(withUS_LPCNumScholars2D, "nLPCscholars", false, "LPC DRs as authors");
+    DRstack(withUS_LPCARCChairScholars2D, "LPCChairscholars", false, "LPC DRs as ARC chairs");
+    DRstack(withUS_LPCARCScholars2D, "LPCARCscholars", false, "CADI entries");
+    DRstack(withUS_LPCNumARCScholars2D, "nLPCNumARCscholars", false, "LPC DRs as ARC members");
+
+    cat3stack(withUS_LPCScholarsActive2D, "LPCScholarsActive", true);
+    cat3stack(withUS_LPCNumScholarsActive2D, "LPCNumScholarsActive", true, "LPC DRs as authors Active");
+    cat1stack(withUS_LPCScholarsPublished2D, "LPCScholarsPublished", true);
+    cat1stack(withUS_LPCNumScholarsPublished2D, "LPCNumScholarsPublished", true, "LPC DRs as authors Published");    
+    cat2stack(withUS_LPCScholarsPASOnly2D, "LPCScholarsPASOnly", true);
+    cat2stack(withUS_LPCNumScholarsPASOnly2D, "LPCNumScholarsPASOnly", true, "LPC DRs as authors PAS-Only");    
+    cat4stack(withUS_LPCScholarsPublished_PAS2D, "LPCScholarsPublished_PAS", true);
+    cat4stack(withUS_LPCNumScholarsPublished_PAS2D, "LPCNumScholarsPublished_PAS", true, "LPC DRs as authors Published+PAS");        
+    cat5stack(withUS_LPCScholarsPublished_PAS_Active2D, "LPCScholarsPublished_PAS_Active", true);
+    cat5stack(withUS_LPCNumScholarsPublished_PAS_Active2D, "LPCNumScholarsPublished_PAS_Active", true, "LPC DRs as authors Published+PAS+Active");    
     
     tstack(activeMany2D, "CADIentriesMany", true);
     tstack(active2D, "CADIentries");
