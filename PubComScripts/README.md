@@ -1,24 +1,35 @@
-**A cleaned up version of https://github.com/mtonjes/Metrics/tree/master/sheets for a different purpose**
----
 **Query CADI; Make sheets**
-Instructions how to generate CADI sheets (presumably you have already setup an appropriate CMSSW working area):
+
+Instructions how to generate CADI sheets:
+
+*Setup working area once on cmslpc*
+```
+cd ~/nobackup
+cmsrel CMSSW_8_0_25
+git clone https://github.com/mtonjes/Metrics.git
+cd Metrics/PubComScripts
+chmod +x generate_sheets8.sh
+chmod +x cleanup8.sh
+```
+Ensure your grid certificate is obtained and installed on the cmslpc cluster: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookStartingGrid#BasicGrid
+
+For each time you run the code do the following: 
+*Note* we are cleaning up previous results, so you may wish to back them up in advance if you wish to retain previous results:
 
 ```
-> git clone https://github.com/mtonjes/Metrics.git
+voms-proxy-init --valid 168:00 -voms cms
 
-> cd Metrics/PubComScripts
+cd CMSSW_8_0_25/src
 
-> voms-proxy-init --valid 168:00 -voms cms
+cmsenv
 
-> cd CMSSW_8_0_25/src
+cd -
 
-> cmsenv
+cd ~/nobackup/Metrics/PubComScripts
 
-> cd -
+./cleanup8.sh
 
-> chmod +x generate_sheets8.sh
-
-> ./generate_sheets8.sh
+./generate_sheets8.sh
 ```
 
 
@@ -39,14 +50,15 @@ In case of unrecoverable error:
 3. if problem persist contact http://lpc.fnal.gov/computing/gethelp.shtml
 
 **Make plots**
+
 1) backup your current results
 ```
-cd Metrics
+cd ~/nobackup/Metrics
 cp -pr PubComScripts PubComScripts_TodayDate
 ```
 2) Make plots directory and copy sheet8.csv (not yet implemented July 5, 2017)
 ```
-cd PubComScripts
+cd ~/nobackup/Metrics/PubComScripts
 mkdir plots
 mkdir plots/zcode
 cp -pr sheets/sheet8.csv plots/.
@@ -55,5 +67,9 @@ root -l -b -q ../scripts/analyse_PubCom.C
 ```
 3) Look for errors
 ---
+
 **Debugging and future note**
+
 A) Note that prerequisites.py queries this web page: http://cms.cern.ch/iCMS/analysisadmin/cadilines?awg=any, if there are 2,000 or more items found you will need to edit prerequisites.py to allow for it to obtain 3 pages of data instead of 2.
+
+B) This is a cleaned up version with much functionality removed and a different use case path of https://github.com/mtonjes/Metrics/tree/master/sheets
