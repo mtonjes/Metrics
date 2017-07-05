@@ -2,7 +2,7 @@
 
 Instructions how to generate CADI sheets:
 
-*Setup working area once on cmslpc*
+**Setup working area once on cmslpc**
 ```
 cd ~/nobackup
 cmsrel CMSSW_8_0_25
@@ -13,7 +13,8 @@ chmod +x cleanup8.sh
 ```
 Ensure your grid certificate is obtained and installed on the cmslpc cluster: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookStartingGrid#BasicGrid
 
-For each time you run the code do the following: 
+**Daily or weekly run of code**
+For each time you run the code do the following after you login to cmslpc:.
 *Note* we are cleaning up previous results, so you may wish to back them up in advance if you wish to retain previous results:
 
 ```
@@ -68,7 +69,7 @@ root -l -b -q ../scripts/analyse_PubCom.C
 3) Look for errors
 ---
 
-**Debugging and future note**
+**Debugging and future development/usage notes**
 
 A) Note that prerequisites.py queries this web page: http://cms.cern.ch/iCMS/analysisadmin/cadilines?awg=any, if there are 2,000 or more items found you will need to edit prerequisites.py to allow for it to obtain 3 pages of data instead of 2.
 
