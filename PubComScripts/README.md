@@ -16,15 +16,13 @@ Instructions how to generate CADI sheets (presumably you have already setup an a
 
 > cd -
 
-```
-Follow [1] instruction below if you have updated list of USA LPC authors 
-```
 > chmod +x generate_sheets8.sh
+
 > ./generate_sheets8.sh
 ```
 
 
-You will be asked to enter your CERN login and password, because CADI requires authentication in order to access data (note: this will be saved after the initial run in the file).
+You will be asked to enter your CERN login and password, because CADI requires authentication in order to access data (note: this will be saved after the initial run in the file for each day's login).
 
 ...wait... take a break :)
 
@@ -39,7 +37,7 @@ In case of unrecoverable error:
 2. try again `./generate_sheets8.sh`
 
 3. if problem persist contact http://lpc.fnal.gov/computing/gethelp.shtml
-```
+
 **Make plots**
 1) backup your current results
 ```
@@ -57,4 +55,5 @@ root -l -b -q ../scripts/analyse_PubCom.C
 ```
 3) Look for errors
 ---
-
+**Debugging and future note**
+A) Note that prerequisites.py queries this web page: http://cms.cern.ch/iCMS/analysisadmin/cadilines?awg=any, if there are 2,000 or more items found you will need to edit prerequisites.py to allow for it to obtain 3 pages of data instead of 2.
