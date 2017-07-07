@@ -12,7 +12,6 @@ Marguerite Tonjes
 
 import json
 
-
 analysies_json = ""
 output = ""
 total = ""
@@ -74,6 +73,8 @@ for analysis_code in analysis_codes:
     chairperson = analysis["chairperson"]
     if len(chairperson.keys()) > 0:
         arc_chair = chairperson["fullname"]
+        print "arc chair of ",analysis_code
+        print "is ",arc_chair.encode('utf-8')
         # arc_chair_from_USA
 #         if chairperson["country"] == "USA":
 #             arc_chair_from_USA = 1
@@ -110,6 +111,8 @@ for analysis_code in analysis_codes:
     ### CADI contact
     cadi_contact = analysis["cadi_contact"]
     cadi_contact_name = cadi_contact["fullname"]
+    print "cadi contact of ",analysis_code
+    print "is ",cadi_contact_name.encode('utf-8')
 #     if len(cadi_contact.keys()) > 0:
 #         # cadi_contact_from_USA
 #         if cadi_contact["country"] == "USA":
@@ -247,8 +250,15 @@ for analysis_code in analysis_codes:
     output_line.append(analysis_code)
     output_line.append(status)
     output_line.append(samples)
-    output_line.append(arc_chair.__str__())
-    output_line.append(cadi_contact_name.__str__())
+#
+# Traceback (most recent call last):
+#  File "scripts/sheet8Main.py", line 250, in <module>
+#    output_line.append(arc_chair.__str__())
+# UnicodeEncodeError: 'utf-8' codec can't encode character u'\xfc' in position 1: ordinal not in range(128)
+# https://stackoverflow.com/questions/5760936/handle-wrongly-encoded-character-in-python-unicode-string
+### want to be able to do those, which is why I'm debugging above
+    output_line.append(arc_chair.encode("utf-8").__str__())
+    output_line.append(cadi_contact_name.encode("utf-8").__str__())
     output_line.append(date)
 #     output_line.append(arc_chair_from_USA.__str__())
 #     output_line.append(arc_chair_from_LPC.__str__())
@@ -276,7 +286,13 @@ for analysis_code in analysis_codes:
 #     output_line.append(len(institutes_LPC).__str__())
 #     output_line.append(len(institutes_LPC_N).__str__())
 
-    output += " | ".join(output_line) + "\n"
+    coded_output_line = []
+    for i in output_line:
+        try: coded_output_line.append(i.encode('utf-8'))
+        except: coded_output_line.append(i)
+    output += (" | ".join(coded_output_line) + "\n")
+        
+#    output += " | ".join(output_line) + "\n"
 
 #     if (arc_chair_from_USA != "-"):
 #         arc_chair_from_USA_total += arc_chair_from_USA
@@ -348,9 +364,9 @@ output_line.append("")
 
 total = " | ".join(output_line) + "\n"
 
-header = "Analysis code | Status | Samples | ARC chair | CADI contact | date |\n"
+header = "Analysis code | Status | Samples | ARC chair | CADI contact | Today's date |\n"
 
-
+# 
 
 f = open("sheets/sheet8.csv","w")
 #f.write(header+output+header+total)
