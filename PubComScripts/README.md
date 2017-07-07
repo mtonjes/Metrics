@@ -30,7 +30,7 @@ cd ~/nobackup/Metrics/PubComScripts
 
 ./cleanup8.sh
 
-./generate_sheets8.sh
+./generate_sheet8.sh
 ```
 
 
@@ -46,7 +46,7 @@ In case of unrecoverable error:
 
 1. run cleanup `chmod +x cleanup8.sh && ./cleanup8.sh`
 
-2. try again `./generate_sheets8.sh`
+2. try again `./generate_sheet8.sh`
 
 3. if problem persist contact http://lpc.fnal.gov/computing/gethelp.shtml
 
