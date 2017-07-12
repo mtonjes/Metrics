@@ -142,7 +142,7 @@ for analysis_code in analysis_codes:
         for i in cwr:
             try: cwr_coded.append(i.encode('utf-8'))
             except: cwr_coded.append(i)
-        cwr_out += (" | ".join(cwr_coded) + "\n")
+        cwr_out += (",".join(cwr_coded) + "\n")
 #        cwr.append(status.__str__()+" "+analysis_code.__str__()+"\n")
         
     if status=="ACCEPT":
@@ -157,7 +157,7 @@ for analysis_code in analysis_codes:
         for i in accepted:
             try: accepted_coded.append(i.encode('utf-8'))
             except: accepted_coded.append(i)
-        accepted_out += (" | ".join(accepted_coded) + "\n")
+        accepted_out += (",".join(accepted_coded) + "\n")
 #        accepted.append(status.__str__()+" "+analysis_code.__str__()+"\n")
               
     if status=="SUB":
@@ -172,7 +172,7 @@ for analysis_code in analysis_codes:
         for i in submitted:
             try: submitted_coded.append(i.encode('utf-8'))
             except: submitted_coded.append(i)
-        submitted_out += (" | ".join(submitted_coded) + "\n")    
+        submitted_out += (",".join(submitted_coded) + "\n")    
 #        submitted.append(status.__str__()+" "+analysis_code.__str__()+" "+"\n")
 
 
@@ -439,7 +439,7 @@ total = " | ".join(output_line) + "\n"
 
 header = "Today's date | Analysis code | Status | Samples | Title | ARC chair | CADI contact\n"
 
-status_header = "Today's date | Analysis code | Status | Title \n"
+status_header = "Today's date,Analysis code,Status,Title \n"
 
 
                         
@@ -454,15 +454,15 @@ f.write(header+output)
 f.close()
 
 f2 = open("data/Accepted_{}.csv".format(now),"w")
-f2.write(accepted_out)
+f2.write(status_header+accepted_out)
 f2.close()
 
 f3 = open("data/CWR_{}.csv".format(now),"w")
-f3.write(cwr_out)
+f3.write(status_header+cwr_out)
 f3.close()
 
 f4 = open("data/Submitted_{}.csv".format(now),"w")
-f4.write(submitted_out)
+f4.write(status_header+submitted_out)
 f4.close()
 #print header+output+header+total
 
