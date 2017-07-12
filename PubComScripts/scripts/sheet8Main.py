@@ -142,7 +142,7 @@ for analysis_code in analysis_codes:
         for i in cwr:
             try: cwr_coded.append(i.encode('utf-8'))
             except: cwr_coded.append(i)
-        cwr_out += (",".join(cwr_coded) + "\n")
+        cwr_out += (",".join(cwr_coded))
 #        cwr.append(status.__str__()+" "+analysis_code.__str__()+"\n")
         
     if status=="ACCEPT":
@@ -157,7 +157,7 @@ for analysis_code in analysis_codes:
         for i in accepted:
             try: accepted_coded.append(i.encode('utf-8'))
             except: accepted_coded.append(i)
-        accepted_out += (",".join(accepted_coded) + "\n")
+        accepted_out += (",".join(accepted_coded))
 #        accepted.append(status.__str__()+" "+analysis_code.__str__()+"\n")
               
     if status=="SUB":
@@ -172,7 +172,7 @@ for analysis_code in analysis_codes:
         for i in submitted:
             try: submitted_coded.append(i.encode('utf-8'))
             except: submitted_coded.append(i)
-        submitted_out += (",".join(submitted_coded) + "\n")    
+        submitted_out += (",".join(submitted_coded))    
 #        submitted.append(status.__str__()+" "+analysis_code.__str__()+" "+"\n")
 
 
@@ -448,7 +448,7 @@ status_header = "Today's date,Analysis code,Status,Title \n"
 
 # 
 
-f = open("sheets/sheet8.csv","w")
+f = open("sheets/sheet8_{}.csv".format(now),"w")
 #f.write(header+output+header+total)
 f.write(header+output)
 f.close()
