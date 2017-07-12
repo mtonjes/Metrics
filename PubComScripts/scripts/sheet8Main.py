@@ -453,15 +453,15 @@ f = open("sheets/sheet8.csv","w")
 f.write(header+output)
 f.close()
 
-f2 = open("data/Accepted_{}.txt".format(now),"w")
+f2 = open("data/Accepted_{}.csv".format(now),"w")
 f2.write(accepted_out)
 f2.close()
 
-f3 = open("data/CWR_{}.txt".format(now),"w")
+f3 = open("data/CWR_{}.csv".format(now),"w")
 f3.write(cwr_out)
 f3.close()
 
-f4 = open("data/Submitted_{}.txt".format(now),"w")
+f4 = open("data/Submitted_{}.csv".format(now),"w")
 f4.write(submitted_out)
 f4.close()
 #print header+output+header+total
