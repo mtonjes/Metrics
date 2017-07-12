@@ -40,7 +40,9 @@ You will be asked to enter your CERN login and password, because CADI requires a
 
 Generated sheets will be stored in the **sheets** directory as csv files. Separator is pipe `|`
 
-For the first time script will take about 30mins because it downloads a lot of data from CADI.
+Generated reports for CADI entries in ACCEPTED, SUB, or CWR are in date/timestamped csv files in the **data** directory. Separator is commma `,`
+
+For the first time script will take about 30mins because it downloads a lot of data from CADI. If it does NOT ask for your CERN password, then you did not run the ./cleanup8.sh script to remove the **last run** of getting data from CADI.
 
 In case of unrecoverable error:
 
