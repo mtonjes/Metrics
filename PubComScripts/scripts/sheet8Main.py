@@ -11,6 +11,7 @@ Marguerite Tonjes
 '''
 
 import json
+import time
 
 analysies_json = ""
 output = ""
@@ -32,6 +33,17 @@ FR_total = 0
 CWR_total = 0
 arc_chair = ""
 cadi_contact_name = ""
+num_analyses_accept = 0
+num_analyses_cwr = 0
+num_analyses_sub = 0
+
+cwr_out = ""
+submitted_out = ""
+accepted_out = ""
+    
+# https://www.cyberciti.biz/faq/howto-get-current-date-time-in-python/
+now = time.strftime("date_%m_%d_%Y_time_%H_%M_%S")
+print ("Current time %s"  % now )
 
 # going through all cadi analysies
 for analysis_code in analysis_codes:
@@ -40,7 +52,7 @@ for analysis_code in analysis_codes:
     samples = ""
     arc_chair = "-"
     cadi_contact_name = "-"
-
+    analysis_title = "-"
 #     arc_chair_from_LPC = "-"
 #     arc_chair_from_LPC_N = "-"###
 #     cadi_contact_from_USA = "-"
@@ -67,14 +79,16 @@ for analysis_code in analysis_codes:
 
     # Status
     status = analysis["status"]
+    
     samples = analysis["samples"]
+    ### date is not being filled in properly, use current time/date instead
     date = analysis["date"]
     ### ARC chairperson
     chairperson = analysis["chairperson"]
     if len(chairperson.keys()) > 0:
         arc_chair = chairperson["fullname"]
-        print "arc chair of ",analysis_code
-        print "is ",arc_chair.encode('utf-8')
+#        print "arc chair of ",analysis_code
+#        print "is ",arc_chair.encode('utf-8')
         # arc_chair_from_USA
 #         if chairperson["country"] == "USA":
 #             arc_chair_from_USA = 1
@@ -111,8 +125,59 @@ for analysis_code in analysis_codes:
     ### CADI contact
     cadi_contact = analysis["cadi_contact"]
     cadi_contact_name = cadi_contact["fullname"]
-    print "cadi contact of ",analysis_code
-    print "is ",cadi_contact_name.encode('utf-8')
+    
+    # analysis title
+    analysis_title = analysis["analysis_name"]
+ 
+    # count status
+    if status=="CWR":
+        cwr = []
+        num_analyses_cwr+=1
+        print status," ",analysis_code," ",analysis_title.encode('utf-8')
+        cwr.append(now)
+        cwr.append(analysis_code.__str__())
+        cwr.append(status.__str__())
+        cwr.append(analysis_title.encode('utf-8').__str__())   
+        cwr_coded = []
+        for i in cwr:
+            try: cwr_coded.append(i.encode('utf-8'))
+            except: cwr_coded.append(i)
+        cwr_out += (" | ".join(cwr_coded) + "\n")
+#        cwr.append(status.__str__()+" "+analysis_code.__str__()+"\n")
+        
+    if status=="ACCEPT":
+        accepted = []
+        num_analyses_accept+=1
+        print status," ",analysis_code," ",analysis_title.encode('utf-8')
+        accepted.append(now)
+        accepted.append(analysis_code.__str__())
+        accepted.append(status.__str__())
+        accepted.append(analysis_title.encode('utf-8').__str__())
+        accepted_coded = []
+        for i in accepted:
+            try: accepted_coded.append(i.encode('utf-8'))
+            except: accepted_coded.append(i)
+        accepted_out += (" | ".join(accepted_coded) + "\n")
+#        accepted.append(status.__str__()+" "+analysis_code.__str__()+"\n")
+              
+    if status=="SUB":
+        submitted = []
+        num_analyses_sub+=1
+        print status," ",analysis_code," ",analysis_title.encode('utf-8')
+        submitted.append(now)
+        submitted.append(analysis_code.__str__())
+        submitted.append(status.__str__())
+        submitted.append(analysis_title.encode('utf-8').__str__())
+        submitted_coded = []
+        for i in submitted:
+            try: submitted_coded.append(i.encode('utf-8'))
+            except: submitted_coded.append(i)
+        submitted_out += (" | ".join(submitted_coded) + "\n")    
+#        submitted.append(status.__str__()+" "+analysis_code.__str__()+" "+"\n")
+
+
+#    print "cadi contact of ",analysis_code
+#    print "is ",cadi_contact_name.encode('utf-8')
 #     if len(cadi_contact.keys()) > 0:
 #         # cadi_contact_from_USA
 #         if cadi_contact["country"] == "USA":
@@ -247,9 +312,11 @@ for analysis_code in analysis_codes:
 #     	print "sheet5 fix mismatch, Analysis Code: %s, Original authors_num: %d, authors_num_fix: %d" %(analysis_code,authors_num,authors_num_fix)
     
     output_line = []
+    output_line.append(now)    
     output_line.append(analysis_code)
     output_line.append(status)
     output_line.append(samples)
+    output_line.append(analysis_title)
 #
 # Traceback (most recent call last):
 #  File "scripts/sheet8Main.py", line 250, in <module>
@@ -259,7 +326,6 @@ for analysis_code in analysis_codes:
 ### want to be able to do those, which is why I'm debugging above
     output_line.append(arc_chair.encode("utf-8").__str__())
     output_line.append(cadi_contact_name.encode("utf-8").__str__())
-    output_line.append(date)
 #     output_line.append(arc_chair_from_USA.__str__())
 #     output_line.append(arc_chair_from_LPC.__str__())
 #     output_line.append(arc_chair_from_LPC_N.__str__())###
@@ -291,7 +357,9 @@ for analysis_code in analysis_codes:
         try: coded_output_line.append(i.encode('utf-8'))
         except: coded_output_line.append(i)
     output += (" | ".join(coded_output_line) + "\n")
-        
+
+
+                        
 #    output += " | ".join(output_line) + "\n"
 
 #     if (arc_chair_from_USA != "-"):
@@ -334,8 +402,13 @@ for analysis_code in analysis_codes:
 
 
 output_line = []
-output_line.append("TOTAL not yet filled in")
-output_line.append("")
+#output_line.append("TOTALS for "+now+"\n")
+#output_line.append("Accepted: ",num_analyses_accept)
+#output_line.append("Submitted: ",num_analyses_sub)
+#output_line.append("CWR: ",num_analyses_cwr)
+print "Accepted: ",num_analyses_accept
+print "Submitted: ",num_analyses_sub
+print "CWR: ",num_analyses_cwr
 # output_line.append(arc_chair_from_USA_total.__str__())
 # output_line.append(arc_chair_from_LPC_total.__str__())
 # output_line.append(arc_chair_from_LPC_total_N.__str__())###
@@ -364,7 +437,14 @@ output_line.append("")
 
 total = " | ".join(output_line) + "\n"
 
-header = "Analysis code | Status | Samples | ARC chair | CADI contact | Today's date |\n"
+header = "Today's date | Analysis code | Status | Samples | Title | ARC chair | CADI contact\n"
+
+status_header = "Today's date | Analysis code | Status | Title \n"
+
+
+                        
+#    output += " | ".join(output_line) + "\n"
+
 
 # 
 
@@ -372,6 +452,18 @@ f = open("sheets/sheet8.csv","w")
 #f.write(header+output+header+total)
 f.write(header+output)
 f.close()
+
+f2 = open("data/Accepted_{}.txt".format(now),"w")
+f2.write(accepted_out)
+f2.close()
+
+f3 = open("data/CWR_{}.txt".format(now),"w")
+f3.write(cwr_out)
+f3.close()
+
+f4 = open("data/Submitted_{}.txt".format(now),"w")
+f4.write(submitted_out)
+f4.close()
 #print header+output+header+total
 
 print "Done"
