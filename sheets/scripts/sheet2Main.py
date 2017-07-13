@@ -63,7 +63,7 @@ def parseMemberInfo(fileName):
     # first cells for labels
     cells           = tr[0].findChildren('th')
     counter         = 0
-    NameCMSIndex = NamfCMSIndex = InstituteIndex = CountryIndex = 0
+    NameCMSIndex = NamfCMSIndex = InstituteIndex = CountryIndex = GenderIndex = 0
     NameCERNIndex = NamfCERNIndex = None
 
     for i in cells:
@@ -71,6 +71,8 @@ def parseMemberInfo(fileName):
             NameCMSIndex    = counter
         elif "NamfCMS".lower() in i.text.lower():
             NamfCMSIndex    = counter
+        elif "Gender".lower() in i.text.lower():
+            GenderIndex    = counter            
         elif "InstCode".lower() in i.text.lower():
             InstituteIndex  = counter
         elif "Country".lower() in i.text.lower():
@@ -91,6 +93,7 @@ def parseMemberInfo(fileName):
         cells           = i.findChildren('td')
         data.append([cells[NameCMSIndex].text.encode('utf-8'),
                     cells[NamfCMSIndex].text.encode('utf-8'),
+                    cells[GenderIndex].text.encode('utf-8'),
                     cells[InstituteIndex].text.encode('utf-8'),
                     cells[CountryIndex].text.encode('utf-8'),
                     "%s_%d" % (fileName,user_id)
@@ -98,6 +101,7 @@ def parseMemberInfo(fileName):
         if NamfCERNIndex != None and NamfCERNIndex != None and cells[NameCERNIndex].text != "" and cells[NamfCERNIndex].text != "":
             data.append([cells[NameCERNIndex].text.encode('utf-8'),
                         cells[NamfCERNIndex].text.encode('utf-8'),
+                        cells[GenderIndex].text.encode('utf-8'),
                         cells[InstituteIndex].text.encode('utf-8'),
                         cells[CountryIndex].text.encode('utf-8'),
                         "%s_%d" % (fileName,user_id)
