@@ -47,7 +47,7 @@ for analysis_code in analysis_codes:
                         institutes_usa += 1
     
     output_line = []
-    output_line.append(analysis_code)
+    output_line.append(analysis_code.encode('utf-8'))
     output_line.append(", ".join(notes_ids))
     output_line.append(nauth_total.__str__())
     output_line.append(nauth_usa_total.__str__())
@@ -55,8 +55,19 @@ for analysis_code in analysis_codes:
     output_line.append(len(institutes).__str__())
     output_line.append(institutes_usa.__str__())
     
-    output+= " | ".join(output_line) + "\n"
-
+    coded_output_line = []
+    for i in output_line:
+        try: coded_output_line.append(i.encode('utf-8'))
+        except: coded_output_line.append(i)
+    output += (" | ".join(coded_output_line) + "\n")
+# UnicodeEncodeError: 'ascii' codec can't encode character u'\xf6' in position 14317: ordinal not in range(128) debugging print statements
+#    print "Sheet3: ",analysis_code
+#    print "Sheet3: ",", ",notes_ids
+#    print "Sheet3: ",nauth_total,", ",nauth_usa_total
+#    print "Sheet3: ",institutes.keys(),", "
+#    print "Sheet3: ",len(institutes),", ",institutes_usa
+#    print "End of entry"
+    
 header = " Analysis code | AN Notes | # Authors | # Authors from USA | Institutes | # Institutes | # Insitutes from USA\n"    
 f = open("sheets/sheet3.csv","w")
 f.write(header+output)
