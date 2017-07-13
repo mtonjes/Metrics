@@ -8,7 +8,7 @@ python scripts/sheet1Main.py
 echo "Generating Sheet2"
 python scripts/sheet2Main.py
 
-echo "Generating Sheet4"
+echo "Generating Sheet3"
 python scripts/sheet3Main.py
 
 echo "Generating Sheet4"
