@@ -21,6 +21,7 @@ using namespace std;
 unsigned int theIndex = 1; // Orduna
 std::ofstream theTableHTML("ztable.html");
 std::ofstream theCADIcsv("zLPCMajorityCADI.csv");
+std::ofstream allCADIcsv("zAllCADI.csv");
 
 TCanvas* canv ;
 static const char category[6][30] ={"Inactive", "Published", "PAS-Only PUB", "Active", "Published_PAS", "Published_PAS_Active"};
@@ -620,6 +621,9 @@ int activitySumAll(){
        if (majorityUS_LPCnew() && activity()!=0 && year()>=15){
             theCADIcsv<<code<<","<<activity()<<","<<anAuth<<","<<anAuthUSA<<","<<anAuthLPCnew<<","<<(float)anAuthUSA/anAuth<<","<<(float)anAuthLPCnew/anAuthUSA<<","<<majorityUS_LPCnew()<<","<<majorityLPCnew()<<","<<majorityUS_nonLPCnew()<<","<<majorityUS()<<",>=0.5 LPCnew/USA"<<std::endl;          
        }
+       float myUSAfrac = -1.;
+       if (anAuth > 0) { myUSAfrac = (float)anAuthUSA/anAuth; }
+       allCADIcsv<<code<<","<<activity()<<","<<anAuth<<","<<anAuthUSA<<","<<myUSAfrac<<","<<majorityUS()<<","<<significantUS()<<std::endl;          
        return 0;
     }
    void IfCalculate ( bool CalcAuthNotUS, bool CalcAuthLPCnew, bool CalcAuthUS_notLPCnew ){
@@ -1346,13 +1350,14 @@ THStack* tstack(int bin, TH2* histo, TH2F* US, TH2F* US_LPC, TH2F* US_nonLP, str
 void startTableHTML() {
     theTableHTML << "<html><head></head><body><center><table style='width:50%'><tbody>" << std::endl;
     theTableHTML << "<br>Plots below use papers from 2015-2017.<br>" << std::endl;
-    theTableHTML << "<br>CADI queried May 11, 2017 11:10.<br>" << std::endl;
-    theTableHTML << "Plots that have 'New' in the names use April 2016 LPC survey + 2016-2017 DR(US) + 2015-2016 G&V(US) + 2017 LPC office survey for LPC assignment."  << std::endl;
+    theTableHTML << "<br>CADI queried November 9, 2017 17:00.<br>" << std::endl;
+    theTableHTML << "Plots that have 'New' in the names use April 2016 LPC survey + 2016-2017 DR(US) + 2015-2017 G&V(US) + 2017 LPC office survey for LPC assignment."  << std::endl;
     theTableHTML << "<br>Plots with <i>Scholars</i> in the name use Distinguished Researchers for selection.<br>"<< std::endl;
 }
 
 void startCADIcsv(){
     theCADIcsv <<"Code,Status(1=pub;2=PAS;3=Active),anAuth,anAuthUSA,anAuthLPCnew,anAuthUSA/anAuth,anAuthLPCnew/anAuthUSA,majorityUS_LPCnew(),majorityLPCnew(),majorityUS_nonLPCnew(),majorityUS(),Notes"<<std::endl;
+    allCADIcsv <<"CADI entry,Status(1=pub;2=PAS;3=Active),total AN note Authors,AN Note AuthorsUSA,(AN Authors USA)/(total AN Authors),majorityUS boolean, significantUS boolean"<<std::endl;
 }
 
 void endTableHTML() {
@@ -2615,9 +2620,10 @@ void analyse()
     for (int cat=0;cat<6;++cat) {
         std::cout << "Category "<<cat<<": "<<category[cat]<<std::endl;
         std::cout << "PAG & \tTotal & \tAuth US & \tLPCnew & \tnon-LPCnew & \t";
-        std::cout << "Majr US & \tLPCnew & \tnon-LPCnew & \t";
+        std::cout << "Majr US & \tnonMajr US & \tLPCnew & \tnon-LPCnew & \t";
+        std::cout << "Signif US & \tnonSignif US & \tLPCnew & \tnon-LPCnew & \t";
         std::cout << "Chai US & \tLPCnew & \tnon-LPCnew & \t";
-        std::cout << "Cont US & \tLPCnew & \tnon-LPCnew & \t";
+        std::cout << "Cont US & \tCont nonUS & \tLPCnew  & \tnon-LPCnew & \t";
         std::cout << "ARC & \tARC US & \tLPCnew & \tnon-LPCnew & \n";
         for (unsigned gr = 0; gr < PAG.size(); ++gr) {
             std::cout << PAG[gr]<<" & \t"<< active2D->GetBinContent(gr+1,cat+1)
@@ -2625,12 +2631,18 @@ void analyse()
             <<" & \t"<< withUS_LPCnewauthors2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< withUS_nonLPCnewauthors2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< majUSauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< active2D->GetBinContent(gr+1,cat+1) - majUSauthors2D->GetBinContent(gr+1,cat+1)                    
             <<" & \t"<< majUS_LPCnewauthors2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< majUS_nonLPCnewauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< signifUSauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< active2D->GetBinContent(gr+1,cat+1) - signifUSauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< signifUS_LPCnewauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< signifUS_nonLPCnewauthors2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< chairUS2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< chairLPCnew2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< chairnonLPCnew2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< contactUS2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< active2D->GetBinContent(gr+1,cat+1) - contactUS2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< contactLPCnew2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< contactnonLPCnew2D->GetBinContent(gr+1,cat+1)
             <<" & \t"<< totArc2D->GetBinContent(gr+1,cat+1)
@@ -2642,12 +2654,37 @@ void analyse()
         }
         std::cout << std::endl;
     }
-    
-    rootfile->Write();
+        std::cout <<" Different smaller spreadsheet \n"<< std::endl;    
+    for (int cat=0;cat<6;++cat) {
+        std::cout << "Category "<<cat<<": "<<category[cat]<<std::endl;
+        std::cout << "PAG & \tTotal & \t";
+        std::cout << "Majr US & \tnonMajr US & \t";
+        std::cout << "Signif US & \tnonSignif US & \t";
+        std::cout << "Arc Chair US & \tArc Chair nonUS & \t";
+        std::cout << "A least 1 ARC member US & \tNo ARC members US & \t";
+        std::cout << "Cont US & \tCont nonUS & \n";
+        for (unsigned gr = 0; gr < PAG.size(); ++gr) {
+            std::cout << PAG[gr]<<" & \t"<< active2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< majUSauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< active2D->GetBinContent(gr+1,cat+1) - majUSauthors2D->GetBinContent(gr+1,cat+1)                    
+            <<" & \t"<< signifUSauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< active2D->GetBinContent(gr+1,cat+1) - signifUSauthors2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< chairUS2D->GetBinContent(gr+1,cat+1)  
+            <<" & \t"<< active2D->GetBinContent(gr+1,cat+1) - chairUS2D->GetBinContent(gr+1,cat+1)    
+            <<" & \t"<< arcUS2D->GetBinContent(gr+1,cat+1)                       
+            <<" & \t"<< active2D->GetBinContent(gr+1,cat+1) - arcUS2D->GetBinContent(gr+1,cat+1)                       
+            <<" & \t"<< contactUS2D->GetBinContent(gr+1,cat+1)
+            <<" & \t"<< active2D->GetBinContent(gr+1,cat+1) - contactUS2D->GetBinContent(gr+1,cat+1)
+            <<endl;
+            //      <<"\t"<< ->GetBinContent(cat+1,gr+1)
+        }
+        std::cout << std::endl;
+    }    rootfile->Write();
     rootfile->Close();
     endTableHTML();
     theTableHTML.close();
     theCADIcsv.close();
+    allCADIcsv.close();
      
     categories3bin(PAGcounts40,PAGcounts50,PAGcounts80);
     categories3binActive(PAGcounts40A,PAGcounts50A,PAGcounts80A);
