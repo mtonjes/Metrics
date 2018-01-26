@@ -66,6 +66,7 @@ for analysis_code in analysis_codes:
 #    print "Sheet3: ",nauth_total,", ",nauth_usa_total
 #    print "Sheet3: ",institutes.keys(),", "
 #    print "Sheet3: ",len(institutes),", ",institutes_usa
+#    print "Sheet3 storing output line: ",coded_output_line
 #    print "End of entry"
     
 header = " Analysis code | AN Notes | # Authors | # Authors from USA | Institutes | # Institutes | # Insitutes from USA\n"    
