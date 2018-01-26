@@ -22,6 +22,7 @@ unsigned int theIndex = 1; // Orduna
 std::ofstream theTableHTML("ztable.html");
 std::ofstream theCADIcsv("zLPCMajorityCADI.csv");
 std::ofstream allCADIcsv("zAllCADI.csv");
+std::ofstream PlotContentcsv("zPlotContentCADI.csv");
 
 TCanvas* canv ;
 static const char category[6][30] ={"Inactive", "Published", "PAS-Only PUB", "Active", "Published_PAS", "Published_PAS_Active"};
@@ -1553,6 +1554,11 @@ void analyse()
     TH2F* totArcnonLPC2D = prepareHisto2D("totArcnonLPC2D");
     TH2F* totArcLPCnew2D = prepareHisto2D("totArcLPCnew2D");
     TH2F* totArcnonLPCnew2D = prepareHisto2D("totArcnonLPCnew2D");
+
+    TH2F* totAuthors2D = prepareHisto2D("totAuthors2D");
+    TH2F* totAuthorsUS2D = prepareHisto2D("totAuthorsUS2D");
+    TH2F* totAuthorsLPCnew2D = prepareHisto2D("totAuthorsLPCnew2D");
+    TH2F* totAuthorsnonLPCnew2D = prepareHisto2D("totAuthorsnonLPCnew2D");
     
     TH2F* totArcCM2D = prepareHisto2D("totarcCM2D");
     TH2F* totArcCMUS2D = prepareHisto2D("totarcCMUS2D");
@@ -2313,10 +2319,10 @@ void analyse()
     tstack(2, activeMany2D, majUSauthors2D, majUS_LPCauthors2D, majUS_nonLPCauthors2D, "majAuthPublished", "Majority of authors","CADI entries");
     tstack(3, activeMany2D, majUSauthors2D, majUS_LPCauthors2D, majUS_nonLPCauthors2D, "majAuthPasOnly",   "Majority of authors","CADI entries");
 
-    tstack(4, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthActive",    "Significant number of authors","CADI entries",true);
-    tstack(2, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublished", "Significant number of authors","CADI entries",true);
-    tstack(3, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPasOnly",   "Significant number of authors","CADI entries",true);
-    tstack(5, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublished+PAS-Only-PUB", "Significant number of authors","CADI entries",true);
+    tstack(4, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthActiveNew",    "Significant number of authors","CADI entries",true);
+    tstack(2, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublishedNew", "Significant number of authors","CADI entries",true);
+    tstack(3, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPasOnlyNew",   "Significant number of authors","CADI entries",true);
+    tstack(5, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublished+PAS-Only-PUBNew", "Significant number of authors","CADI entries",true);
     tstack(6, activeMany2D, signifUSauthors2D, signifUS_LPCnewauthors2D, signifUS_nonLPCnewauthors2D, "signifAuthPublished+PAS-Only-PUB+ActiveNew",   "Significant number of authors","CADI entries",true);
         
     tstack(4, activeMany2D, majUSauthors2D, majUS_LPCnewauthors2D, majUS_nonLPCnewauthors2D, "majAuthActiveNew",    "Majority of authors","CADI entries",true);
@@ -2679,12 +2685,53 @@ void analyse()
             //      <<"\t"<< ->GetBinContent(cat+1,gr+1)
         }
         std::cout << std::endl;
-    }    rootfile->Write();
+    }
+// csv file for Jan 2018 DOE Portfolio review of many possible numbers. 
+// Note that US(LPC) and US(Non-LPC) refers to the division within the US part 
+// of the plots in the non-uscms LPCNew type plots
+	for (int cat=0;cat<6;++cat) {
+		PlotContentcsv<<"Category"<<","<<cat<<","<<category[cat]<<std::endl;
+		PlotContentcsv<<"PAG,Total CADI,Authors US,Authors Not US,Majority authors US,Majority authors Not US,Majority of authors US(LPC),Majority of authors US(Non-LPC),Significant Authors US,Not Significant Authors US,Significant Authors US(LPC),Significant Authors US(Non-LPC),Arc Chair US,Arc Chair nonUS,Arc Chair US(LPC),Arc Chair US(Non-LPC),A least 1 ARC member US,No ARC members US,A least 1 ARC member US(LPC),A least 1 ARC member US(Non-LPC),CADI Contact US,Not CADI Contact US,CADI Contact US(LPC),CADI Contact US(Non-LPC),Total ARC Members(All),Total ARC Members US,Total ARC Members NonUS,Total ARC Members US(LPC),Total ARC Members US(Non-LPC)"<<std::endl;
+        for (unsigned gr = 0; gr < PAG.size(); ++gr) {
+			PlotContentcsv << PAG[gr] <<","<< active2D->GetBinContent(gr+1,cat+1)
+			<<","<< withUSauthors2D->GetBinContent(gr+1,cat+1)
+			<<","<< activeMany2D->GetBinContent(gr+1,cat+1) - withUSauthors2D->GetBinContent(gr+1,cat+1)			
+			<<","<< majUSauthors2D->GetBinContent(gr+1,cat+1)
+			<<","<< activeMany2D->GetBinContent(gr+1,cat+1) - majUSauthors2D->GetBinContent(gr+1,cat+1)
+			<<","<< withUS_LPCnewauthors2D->GetBinContent(gr+1,cat+1)
+            <<","<< withUS_nonLPCnewauthors2D->GetBinContent(gr+1,cat+1)
+            <<","<< signifUSauthors2D->GetBinContent(gr+1,cat+1)
+            <<","<< activeMany2D->GetBinContent(gr+1,cat+1) - signifUSauthors2D->GetBinContent(gr+1,cat+1)            
+            <<","<< signifUS_LPCnewauthors2D->GetBinContent(gr+1,cat+1)
+            <<","<< signifUS_nonLPCnewauthors2D->GetBinContent(gr+1,cat+1)
+            <<","<< chairUS2D->GetBinContent(gr+1,cat+1)
+            <<","<< active2D->GetBinContent(gr+1,cat+1) - chairUS2D->GetBinContent(gr+1,cat+1)            
+            <<","<< chairLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<","<< chairnonLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<","<< arcUS2D->GetBinContent(gr+1,cat+1)                       
+            <<","<< active2D->GetBinContent(gr+1,cat+1) - arcUS2D->GetBinContent(gr+1,cat+1) 
+            <<","<< arcLPCnew2D->GetBinContent(gr+1,cat+1)   
+            <<","<< arcnonLPCnew2D->GetBinContent(gr+1,cat+1)   
+            <<","<< contactUS2D->GetBinContent(gr+1,cat+1)
+            <<","<< active2D->GetBinContent(gr+1,cat+1) - contactUS2D->GetBinContent(gr+1,cat+1)         
+            <<","<< contactLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<","<< contactnonLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<","<< totArc2D->GetBinContent(gr+1,cat+1)
+            <<","<< totArcUS2D->GetBinContent(gr+1,cat+1)
+            <<","<< totArc2D->GetBinContent(gr+1,cat+1) - totArcUS2D->GetBinContent(gr+1,cat+1)
+            <<","<< totArcLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<","<< totArcnonLPCnew2D->GetBinContent(gr+1,cat+1)
+             <<std::endl;
+        }
+        std::cout << std::endl;
+    }           
+    rootfile->Write();
     rootfile->Close();
     endTableHTML();
     theTableHTML.close();
     theCADIcsv.close();
     allCADIcsv.close();
+    PlotContentcsv.close();
      
     categories3bin(PAGcounts40,PAGcounts50,PAGcounts80);
     categories3binActive(PAGcounts40A,PAGcounts50A,PAGcounts80A);
