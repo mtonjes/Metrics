@@ -1979,6 +1979,12 @@ void analyse()
                                                                                             +entries[j].arcChairUSA
                                                                                             -entries[j].arcLPCnew
                                                                                             -entries[j].arcChairLPCnew);
+// added Jan 2018, total authors plots                                                                                            
+            totAuthors2D           ->Fill(entries[j].category().c_str(), entries[j].activity(), entries[j].anAuth);
+            totAuthorsUS2D         ->Fill(entries[j].category().c_str(), entries[j].activity(), entries[j].anAuthUSA);
+            totAuthorsLPCnew2D     ->Fill(entries[j].category().c_str(), entries[j].activity(), entries[j].anAuthLPCnew);
+            totAuthorsnonLPCnew2D  ->Fill(entries[j].category().c_str(), entries[j].activity(), entries[j].anAuthUSA-entries[j].anAuthLPCnew); 
+ 
         }
         
         if (entries[j].activity() == 1) {
@@ -2116,6 +2122,11 @@ void analyse()
                                                                                             +entries[j].arcChairUSA
                                                                                             -entries[j].arcLPCnew
                                                                                             -entries[j].arcChairLPCnew);
+// Jan 2018 addition total authors:
+            totAuthors2D           ->Fill(entries[j].category().c_str(), 4, entries[j].anAuth);
+            totAuthorsUS2D         ->Fill(entries[j].category().c_str(), 4, entries[j].anAuthUSA);
+            totAuthorsLPCnew2D     ->Fill(entries[j].category().c_str(), 4, entries[j].anAuthLPCnew);
+            totAuthorsnonLPCnew2D  ->Fill(entries[j].category().c_str(), 4, entries[j].anAuthUSA-entries[j].anAuthLPCnew);
         } 
      }    
  // Sum of all
@@ -2233,6 +2244,12 @@ void analyse()
                                                                                             +entries[j].arcChairUSA
                                                                                             -entries[j].arcLPCnew
                                                                                             -entries[j].arcChairLPCnew);
+// Jan 2018 total authors
+            totAuthors2D           ->Fill(entries[j].category().c_str(), 5, entries[j].anAuth);
+            totAuthorsUS2D         ->Fill(entries[j].category().c_str(), 5, entries[j].anAuthUSA);
+            totAuthorsLPCnew2D     ->Fill(entries[j].category().c_str(), 5, entries[j].anAuthLPCnew);
+            totAuthorsnonLPCnew2D  ->Fill(entries[j].category().c_str(), 5, entries[j].anAuthUSA-entries[j].anAuthLPCnew);
+
         } 
      }           
         //     if (entries[j].category("B2G") && entries[j].activity()==3 ){
@@ -2372,6 +2389,10 @@ void analyse()
     tstack(4, totArc2D, totArcUS2D , totArcLPCnew2D, totArcnonLPCnew2D, "totArcActiveNew", "Total ARC members", "ARC members");
     tstack(2, totArc2D, totArcUS2D , totArcLPCnew2D, totArcnonLPCnew2D, "totArcPublishedNew", "Total ARC members", "ARC members");
     tstack(3, totArc2D, totArcUS2D , totArcLPCnew2D, totArcnonLPCnew2D, "totArcPasOnlyNew", "Total ARC members", "ARC members");
+
+    tstack(4, totAuthors2D, totAuthorsUS2D , totAuthorsLPCnew2D, totAuthorsnonLPCnew2D, "totAuthorsActiveNew", "Total Authors", "Authors");
+    tstack(2, totAuthors2D, totAuthorsUS2D , totAuthorsLPCnew2D, totAuthorsnonLPCnew2D, "totAuthorsPublishedNew", "Total Authors", "Authors");
+    tstack(3, totAuthors2D, totAuthorsUS2D , totAuthorsLPCnew2D, totAuthorsnonLPCnew2D, "totAuthorsPasOnlyNew", "Total Authors", "Authors");
     
     tstack(4, totArcCM2D, totArcCMUS2D , totArcCMLPCnew2D, totArcCMnonLPCnew2D, "totArcCMActiveNew", "Total ARC members", "ARC members");
     tstack(2, totArcCM2D, totArcCMUS2D , totArcCMLPCnew2D, totArcCMnonLPCnew2D, "totArcCMPublishedNew", "Total ARC members", "ARC members");
@@ -2691,7 +2712,7 @@ void analyse()
 // of the plots in the non-uscms LPCNew type plots
 	for (int cat=0;cat<6;++cat) {
 		PlotContentcsv<<"Category"<<","<<cat<<","<<category[cat]<<std::endl;
-		PlotContentcsv<<"PAG,Total CADI,Authors US,Authors Not US,Majority authors US,Majority authors Not US,Majority of authors US(LPC),Majority of authors US(Non-LPC),Significant Authors US,Not Significant Authors US,Significant Authors US(LPC),Significant Authors US(Non-LPC),Arc Chair US,Arc Chair nonUS,Arc Chair US(LPC),Arc Chair US(Non-LPC),A least 1 ARC member US,No ARC members US,A least 1 ARC member US(LPC),A least 1 ARC member US(Non-LPC),CADI Contact US,Not CADI Contact US,CADI Contact US(LPC),CADI Contact US(Non-LPC),Total ARC Members(All),Total ARC Members US,Total ARC Members NonUS,Total ARC Members US(LPC),Total ARC Members US(Non-LPC)"<<std::endl;
+		PlotContentcsv<<"PAG,Total CADI,Authors US,Authors Not US,Majority authors US,Majority authors Not US,Majority of authors US(LPC),Majority of authors US(Non-LPC),Significant Authors US,Not Significant Authors US,Significant Authors US(LPC),Significant Authors US(Non-LPC),Arc Chair US,Arc Chair nonUS,Arc Chair US(LPC),Arc Chair US(Non-LPC),A least 1 ARC member US,No ARC members US,A least 1 ARC member US(LPC),A least 1 ARC member US(Non-LPC),CADI Contact US,Not CADI Contact US,CADI Contact US(LPC),CADI Contact US(Non-LPC),Total ARC Members(All),Total ARC Members US,Total ARC Members NonUS,Total ARC Members US(LPC),Total ARC Members US(Non-LPC),Total Authors(All),Total Authors US,Total Authors NonUS,Total Authors US(LPC),Total Authors US(Non-LPC)"<<std::endl;
         for (unsigned gr = 0; gr < PAG.size(); ++gr) {
 			PlotContentcsv << PAG[gr] <<","<< active2D->GetBinContent(gr+1,cat+1)
 			<<","<< withUSauthors2D->GetBinContent(gr+1,cat+1)
@@ -2721,6 +2742,11 @@ void analyse()
             <<","<< totArc2D->GetBinContent(gr+1,cat+1) - totArcUS2D->GetBinContent(gr+1,cat+1)
             <<","<< totArcLPCnew2D->GetBinContent(gr+1,cat+1)
             <<","<< totArcnonLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<","<< totAuthors2D->GetBinContent(gr+1,cat+1)
+            <<","<< totAuthorsUS2D->GetBinContent(gr+1,cat+1)
+            <<","<< totAuthors2D->GetBinContent(gr+1,cat+1) - totAuthorsUS2D->GetBinContent(gr+1,cat+1)            
+            <<","<< totAuthorsLPCnew2D->GetBinContent(gr+1,cat+1)
+            <<","<< totAuthorsnonLPCnew2D->GetBinContent(gr+1,cat+1)
              <<std::endl;
         }
         std::cout << std::endl;
