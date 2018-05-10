@@ -591,35 +591,35 @@ int activitySumAll(){
        } else {
           USAfrac = (float)anAuthUSA/anAuth;
        }       
-       if (activity() == 1 && majorityUS_LPCnew() && year()>=15 ){
+       if (activity() == 1 && majorityUS_LPCnew() && year()>=16 ){
        	std::cout << "analyse.C plot published analysis: " << code << ", total auth: " << anAuth << ", anAuthUSA: " << anAuthUSA << ", anAuthLPCnew: " << anAuthLPCnew << ", anAuthUSA/anAuth: " << USAfrac << ", anAuthLPCnew/anAuthUSA: " << LPC_frac << std::endl;
        	std::cout << "select analyse.C plot published analysis with >=0.5 LPCnew authors : " << code << ", booleans: majorityUS_nonLPCnew(): "<<majorityUS_nonLPCnew()<<", majorityUS(): " << majorityUS() << ", majorityUS_LPCnew(): " << majorityUS_LPCnew() <<", just for check: majorityLPCnew(): "<<majorityLPCnew()<< std::endl;
 //       	std::cout << "analyse.C plot check pub, analysis: " << code << ", my version: MajAuthUS_notLPCnew(): "<<MajAuthUS_notLPCnew()<< ", MajAuthUS(): " << MajAuthUS() << ", MajAuthUSLPCnew(): " << MajAuthUSLPCnew() <<", MajAuthNotUS(): " << MajAuthNotUS()<<  std::endl;
        }
-       if (activity() == 1 && significantUS_LPCnew() && year()>=15 ){       
+       if (activity() == 1 && significantUS_LPCnew() && year()>=16 ){       
        	std::cout << "select analyse.C plot published analysis with >=0.3 LPCnew authors : " << code << ", booleans: significantUS_nonLPCnew(): "<<significantUS_nonLPCnew()<<", significantUS(): " << significantUS() << ", significantUS_LPCnew(): " << significantUS_LPCnew() <<", just for check: significantLPCnew(): "<<significantLPCnew()<< std::endl;
        }
-       if (activity() == 1 && year()>=15 ){  
+       if (activity() == 1 && year()>=16 ){  
         std::cout << "ALL analyse.C plot published analysis: " << code << ", total auth: " << anAuth << ", anAuthUSA: " << anAuthUSA << ", anAuthLPCnew: " << anAuthLPCnew << ", anAuthUSA/anAuth: " << USAfrac << ", anAuthLPCnew/anAuthUSA: " << LPC_frac << std::endl;     
        	std::cout << "ALL analyse.C plot published analysis: " << code << ", booleans: significantUS_nonLPCnew(): "<<significantUS_nonLPCnew()<<", significantUS(): " << significantUS() << ", significantUS_LPCnew(): " << significantUS_LPCnew() <<", just for check: significantLPCnew(): "<<significantLPCnew()<< std::endl;
        }       
-       if (activity() == 3 && majorityUS_LPCnew() && year()>=15){
+       if (activity() == 3 && majorityUS_LPCnew() && year()>=16){
        	std::cout << "analyse.C plot Active analysis: " << code << ", total auth: " << anAuth << ", anAuthUSA: " << anAuthUSA << ", anAuthLPCnew: " << anAuthLPCnew << ", anAuthUSA/anAuth: " << USAfrac << ", anAuthLPCnew/anAuthUSA: " << LPC_frac << std::endl;
        	std::cout << "select analyse.C plot Active analysis with >=0.5 LPCnew authors : " << code << ", booleans: majorityUS_nonLPCnew(): "<<majorityUS_nonLPCnew()<<", majorityUS(): " << majorityUS() << ", majorityUS_LPCnew(): " << majorityUS_LPCnew() <<", just for check: majorityLPCnew(): "<<majorityLPCnew()<< std::endl;
 //       	std::cout << "analyse.C plot check pub, analysis: " << code << ", my version: MajAuthUS_notLPCnew(): "<<MajAuthUS_notLPCnew()<< ", MajAuthUS(): " << MajAuthUS() << ", MajAuthUSLPCnew(): " << MajAuthUSLPCnew() <<", MajAuthNotUS(): " << MajAuthNotUS()<<  std::endl;
        }  
-        if (activity() == 3 && significantUS_LPCnew() && year()>=15){
+        if (activity() == 3 && significantUS_LPCnew() && year()>=16){
        	std::cout << "select analyse.C plot Active analysis with >=0.3 LPCnew authors : " << code << ", booleans: significantUS_nonLPCnew(): "<<significantUS_nonLPCnew()<<", significantUS(): " << significantUS() << ", significantUS_LPCnew(): " << significantUS_LPCnew() <<", just for check: significantLPCnew(): "<<significantLPCnew()<< std::endl;
        }
-       if (activity() == 2 && majorityUS_LPCnew() && year()>=15){
+       if (activity() == 2 && majorityUS_LPCnew() && year()>=16){
        	std::cout << "analyse.C plot PAS-only analysis: " << code << ", total auth: " << anAuth << ", anAuthUSA: " << anAuthUSA << ", anAuthLPCnew: " << anAuthLPCnew << ", anAuthUSA/anAuth: " << USAfrac << ", anAuthLPCnew/anAuthUSA: " << LPC_frac << std::endl;
        	std::cout << "select analyse.C plot PAS-only analysis with >=0.5 LPCnew authors : " << code << ", booleans: majorityUS_nonLPCnew(): "<<majorityUS_nonLPCnew()<<", majorityUS(): " << majorityUS() << ", majorityUS_LPCnew(): " << majorityUS_LPCnew() <<", just for check: majorityLPCnew(): "<<majorityLPCnew()<< std::endl;
 //       	std::cout << "analyse.C plot check pub, analysis: " << code << ", my version: MajAuthUS_notLPCnew(): "<<MajAuthUS_notLPCnew()<< ", MajAuthUS(): " << MajAuthUS() << ", MajAuthUSLPCnew(): " << MajAuthUSLPCnew() <<", MajAuthNotUS(): " << MajAuthNotUS()<<  std::endl;
        }  
-       if (activity() == 2 && significantUS_LPCnew() && year()>=15){
+       if (activity() == 2 && significantUS_LPCnew() && year()>=16){
         	std::cout << "select analyse.C plot PAS-only analysis with >=0.3 LPCnew authors : " << code << ", booleans: significantUS_nonLPCnew(): "<<significantUS_nonLPCnew()<<", significantUS(): " << significantUS() << ", significantUS_LPCnew(): " << significantUS_LPCnew() <<", just for check: significantLPCnew(): "<<significantLPCnew()<< std::endl;
        }     
-       if (majorityUS_LPCnew() && activity()!=0 && year()>=15){
+       if (majorityUS_LPCnew() && activity()!=0 && year()>=16){
             theCADIcsv<<code<<","<<activity()<<","<<anAuth<<","<<anAuthUSA<<","<<anAuthLPCnew<<","<<(float)anAuthUSA/anAuth<<","<<(float)anAuthLPCnew/anAuthUSA<<","<<majorityUS_LPCnew()<<","<<majorityLPCnew()<<","<<majorityUS_nonLPCnew()<<","<<majorityUS()<<",>=0.5 LPCnew/USA"<<std::endl;          
        }
        float myUSAfrac = -1.;
@@ -1350,8 +1350,8 @@ THStack* tstack(int bin, TH2* histo, TH2F* US, TH2F* US_LPC, TH2F* US_nonLP, str
 
 void startTableHTML() {
     theTableHTML << "<html><head></head><body><center><table style='width:50%'><tbody>" << std::endl;
-    theTableHTML << "<br>Plots below use papers from 2015-2017.<br>" << std::endl;
-    theTableHTML << "<br>CADI queried November 9, 2017 17:00.<br>" << std::endl;
+    theTableHTML << "<br>Plots below use papers from 2016-2018.<br>" << std::endl;
+    theTableHTML << "<br>CADI queried May 10, 2018 17:00.<br>" << std::endl;
     theTableHTML << "Plots that have 'New' in the names use April 2016 LPC survey + 2016-2017 DR(US) + 2015-2017 G&V(US) + 2017 LPC office survey for LPC assignment."  << std::endl;
     theTableHTML << "<br>Plots with <i>Scholars</i> in the name use Distinguished Researchers for selection.<br>"<< std::endl;
 }
@@ -1665,7 +1665,7 @@ void analyse()
         // Select run
         //if (entries[j].getsamples() == "Run1") continue;
         //if (entries[j].getsamples() == "Run2") continue;
-        if(entries[j].year() < 15) continue;
+        if(entries[j].year() < 16) continue;
         std::cout <<"Checking each CADI entry, j:"<< j<<", entries[j].code(): "<<entries[j].code<<", entries[j].year(): "<<entries[j].year()<<", entries[j].status: "<<entries[j].status<<", entries[j].activity(): "<<entries[j].activity()<< std::endl;
         
         // Select only PAGs
