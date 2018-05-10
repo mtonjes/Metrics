@@ -89,9 +89,13 @@ def fetchAnalyses():
     data1 = handle.getPage('http://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=1&awg=any')
     print "Getting page 2!"
     data2 = handle.getPage('http://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=2&awg=any')
+    print "Getting page 3!"
+    data3 = handle.getPage('http://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=3&awg=any')
 # May '17 have 1,866, so may need to go above p=2 soonish
+# May '18 have 2,017, so have to do 3 pages
 
-    data = data1 + data2
+    data = data1 + data2 + data3
+    
     f = open("data/analyses.html", "w")
     f.write(data)
     f.close()
