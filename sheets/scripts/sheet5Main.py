@@ -92,7 +92,7 @@ def isInLPC(institute):
     return False
 
 def load_usa_lpc_authors_csv():
-    f = open('data/LPCauthors-08November2017_fromLPCsurvey_GV_DR.csv', 'r')
+    f = open('data/LPCauthors-24Sep2018_fromLPCsurvey2016_GV_DR.csv', 'r')
     lines = f.read().split("\n")
     for line in lines[1:]:
         columns = line.split("|")

@@ -32,7 +32,7 @@ def LoadNames(fn):
 
 def load_usa_lpc_authors_csv():
     usa_lpc_authors = {}
-    f = open('data/LPCauthors-06June2017_fromLPCsurvey_GV_DR.csv', 'r')
+    f = open('data/LPCauthors-24Sep2018_fromLPCsurvey2016_GV_DR.csv', 'r')
     lines = f.read().split("\n")
     for line in lines[1:]:
         columns = line.split("|")

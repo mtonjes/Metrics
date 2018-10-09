@@ -1353,9 +1353,9 @@ THStack* tstack(int bin, TH2* histo, TH2F* US, TH2F* US_LPC, TH2F* US_nonLP, str
 
 void startTableHTML() {
     theTableHTML << "<html><head></head><body><center><table style='width:50%'><tbody>" << std::endl;
-    theTableHTML << "<br>Plots below use papers from start of CMS - 2017.<br>" << std::endl;
-    theTableHTML << "<br>CADI queried November 9, 2017 17:00.<br>" << std::endl;
-    theTableHTML << "Plots that have 'New' in the names use April 2016 LPC survey + 2016-2017 DR(US) + 2015-2017 G&V(US) + 2017 LPC office survey for LPC assignment."  << std::endl;
+    theTableHTML << "<br>Plots below use papers from start of CMS - 2018.<br>" << std::endl;
+    theTableHTML << "<br>CADI queried Sept. 24, 2018 11:00.<br>" << std::endl;
+    theTableHTML << "Plots that have 'New' in the names use April 2016 LPC survey + 2016-2018 DR(US) + 2015-2018 G&V(US) + 2017 LPC office survey for LPC assignment."  << std::endl;
     theTableHTML << "<br>Plots with <i>Scholars</i> in the name use Distinguished Researchers for selection.<br>"<< std::endl;
 }
 
