@@ -4,10 +4,12 @@
     ],
     "Austria": [
         "HEPHY"
-    ],
+    ],  
+    "Bahrain": [
+        "BAHRAIN-UNIV"
+    ],        
     "Belarus": [
         "MINSK-INP",
-        "MINSK-NCPHEP",
         "MINSK-RIAPP",
         "MINSK-UNIV"
     ],
@@ -16,6 +18,7 @@
         "BRUSSEL-VUB",
         "BRUXELLES-ULB",
         "GHENT",
+        "LEUVEN-KU",
         "LOUVAIN",
         "MONS"
     ],
@@ -30,12 +33,17 @@
         "SOFIA-UNIV"
     ],
     "China": [
+    	"BEIJING-BUAA",
         "BEIJING-IHEP",
+        "BEIJING-THU",
+        "GUANGZHOU-SYSU",
         "HEFEI-USTC",
         "PEKING-UNIV",
-        "SHANGHAI-IC"
+        "SHANGHAI-IC",
+        "ZHEJIANG-UNIV"
     ],
     "Colombia": [
+    	"ANTIOQUIA",
         "UNIANDES"
     ],
     "Croatia": [
@@ -49,6 +57,10 @@
     "CzechRepublic": [
         "CHARLES-UNIV"
     ],
+    "Ecuador": [
+        "QUITO-EPN",
+        "QUITO-USFQ"
+    ],    
     "Egypt": [
         "ASRT-ENHEP"
     ],
@@ -69,7 +81,7 @@
         "STRASBOURG"
     ],
     "Georgia": [
-        "TBILISI-IHEPI",
+        "TBILISI-GTU",
         "TBILISI-IPAS"
     ],
     "Germany": [
@@ -82,22 +94,28 @@
     ],
     "Greece": [
         "ATHENS",
+        "ATHENS-NTUA",
         "DEMOKRITOS",
         "IOANNINA"
     ],
     "Hungary": [
         "ATOMKI",
         "BUDAPEST",
-        "DEBRECEN-IEP"
+        "BUDAPEST-ELU",
+        "DEBRECEN-IEP",
+        "GYONGYOS-UNIV"
     ],
     "India": [
+    	"BANGALORE-IISC",
         "CHANDIGARH",
         "DELHI-UNIV",
+        "IIT-MADRAS",
         "KOLKATA-SAHA",
         "MUMBAI-BARC",
         "NISER",
-        "TIFR-EHEP",
-        "TIFR-HECR"
+        "PUNE-IISER",
+        "TIFR-A",
+        "TIFR-B"
     ],
     "Iran": [
         "IPM"
@@ -123,31 +141,44 @@
         "TRIESTE"
     ],
     "Korea": [
-        "CHEJU",
-        "CHONBUK",
         "CHONNAM",
-        "DONGSHIN",
-        "KANGWON",
+        "KISTI",
         "KONKUK-UNIV",
         "KOREA-UNIV",
         "KYUNGPOOK",
-        "SEONAM",
-        "SEOUL-EDU",
+        "SEOUL-HANYANG",
+        "SEOUL-KYUNGHEE",
+        "SEOUL-SEJONG",
         "SEOUL-SNU",
         "SEOUL-UNIV",
-        "SKK-UNIV",
-        "WONKWANG"
+        "SKK-UNIV"
     ],
+    "Latvia": [
+        "RIGA-RTU"
+    ],   
+    "Lebanon": [
+        "BEIRUT-LAU",
+        "BEIRUT-AUB",
+        "BEIRUT-LU",
+        "BEIRUT-USJ"
+    ],      
     "Lithuania": [
         "VILNIUS-ACADEMY",
         "VILNIUS-UNIV"
     ],
+    "Malaysia": [
+        "MALAYA"
+    ],     
     "Mexico": [
         "MEXICO-CINVESTAV",
         "MEXICO-IBEROAM",
         "MEXICO-PUEBLA",
-        "MEXICO-UASLP"
+        "MEXICO-UASLP",
+        "SONORA-UNISON"
     ],
+    "Montenegro": [
+        "PODGORICA-UCG"
+    ],     
     "Netherlands": [
         "EINDHOVEN"
     ],
@@ -160,6 +191,8 @@
         "NUST"
     ],
     "Poland": [
+    	"KRAKOW-AGH",
+    	"KRAKOW-IET",
         "WARSAW-IEP",
         "WARSAW-INS",
         "WARSAW-ISE"
@@ -169,15 +202,23 @@
     ],
     "Russia": [
         "DUBNA",
+        "MEPHI",
         "MOSCOW-INR",
         "MOSCOW-ITEP",
         "MOSCOW-LEBEDEV",
+        "MOSCOW-MIPT",
         "MOSCOW-MSU",
+        "MOSCOW-NIKIET",
         "MOSCOW-RDIPE",
         "MYASISHCHEV",
+        "NOVOSIBIRSK-NSU",
         "PROTVINO",
-        "RIE",
-        "ST-PETERSBURG"
+        "ST-PETERSBURG",
+        "TOMSK-POLYTEC",
+        "TOMSK-TSU"
+    ],
+    "Saudi Arabia": [
+        "JAZAN-UNIV"
     ],
     "Serbia": [
         "VINCA"
@@ -187,8 +228,13 @@
         "MADRID-UNIV",
         "OVIEDO",
         "SANTANDER",
+        "SEVILLA-GIE",
         "Zaragoza-ITA"
     ],
+    "Sri Lanka": [
+    	"COLOMBO",
+        "MATARA"
+    ],   
     "Switzerland": [
         "CERN",
         "PSI",
@@ -206,8 +252,23 @@
         "ADANA-CUKUROVA",
         "ANKARA-METU",
         "BOGAZICI",
-        "ISTANBUL-TECH"
+        "ISTANBUL-TECH",
+        "ISTANBUL-UNIV"
     ],
+    "Ukraine": [
+        "KHARKOV-ISC",
+        "KHARKOV-KIPT",
+        "KHARKOV-KSU"
+    ],
+    "UnitedKingdom": [
+    	"BATH-UNIV",
+        "BRISTOL",
+        "BRUNEL",
+        "CCCS-UWE",
+        "DUNDEE-UNIV",
+        "LONDON-IC",
+        "RAL"
+    ],  
     "USA": [
         "ALABAMA-UNIV",
         "BAYLOR-UNIV",
@@ -218,6 +279,8 @@
         "CHICAGO",
         "COLORADO",
         "CORNELL",
+        "CSC-UWI",
+        "DEKALB-NIU",
         "FAIRFIELD",
         "FERMILAB",
         "FLORIDA-FIU",
@@ -246,6 +309,7 @@
         "ROCHESTER",
         "ROCKEFELLER",
         "RUTGERS",
+        "ST-PAUL-BU",
         "SUNY-BUFFALO",
         "TENNESSEE",
         "TEXAS-TAMU",
@@ -258,19 +322,8 @@
         "VANDERBILT",
         "VIRGINIA-UNIV",
         "WAYNE",
-        "WISCONSIN"
-    ],
-    "Ukraine": [
-        "KHARKOV-ISC",
-        "KHARKOV-KIPT",
-        "KHARKOV-KSU"
-    ],
-    "UnitedKingdom": [
-        "BRISTOL",
-        "BRUNEL",
-        "CCCS-UWE",
-        "LONDON-IC",
-        "RAL"
+        "WISCONSIN",
+        "WISCONSIN-CHTC"
     ],
     "Uzbekistan": [
         "TASHKENT"

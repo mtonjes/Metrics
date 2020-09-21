@@ -14,11 +14,13 @@ countries = ["Armenia", "Austria", "Belarus", "Belgium",
              "Croatia", "Cyprus", "Czech Republic", "Egypt",
              "Estonia", "Finland", "France", "Georgia",
              "Germany", "Greece", "Hungary", "India",
-             "Iran", "Ireland", "Italy", "Korea", "Lithuania",
-             "Malaysia", "Mexico", "Netherlands", "New Zealand",
-             "Pakistan", "Poland", "Portugal", "Russia",
-             "Serbia", "Spain", "Switzerland", "Taiwan", "Thailand",
-             "Turkey", "Ukraine", "United Kingdom", "USA", "Uzbekistan"]
+             "Iran", "Ireland", "Italy", "Korea", "Latvia",
+             "Lebanon", "Lithuania", "Malaysia", "Mexico",
+             "Montenegro", "Netherlands", "New Zealand",
+             "Pakistan", "Poland", "Portugal", "Russia", "Saudi Arabia",
+             "Serbia", "Spain", "Sri Lanka", "Switzerland", 
+             "Taiwan", "Thailand", "Turkey", "Ukraine", "United Kingdom", 
+             "USA", "Uzbekistan"]
 
 def parseANotes():
     f = open("data/annotes.html")

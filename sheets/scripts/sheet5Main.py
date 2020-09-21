@@ -9,44 +9,100 @@ Created on Sep 24, 2013
 
 import json
 
+''' Remove non-USCMS institutions: LPC Scholars '''
+# ''' 2020 '''
+#'''Saptaparna Bhattacharya'''
+Scholars=["Freya Blekman"]
+#'''Luca Cadamuro
+#'''Mariarosaria D'Alfonso'''
+Scholars+=[["Aran Garcia-Bellido"]]
+Scholars+=[["Yuri Gershtein"]]
+Scholars+=[["Alexander Grohsjean"]]
+Scholars+=[["Allison Hall"]]
+Scholars+=[["Henning Kirschenmann"]]
+Scholars+=[["Miaoyuan Liu"]]
+#'''Daniel Noonan'''
+Scholars+=[["Christopher Palmer"]]
+Scholars+=[["Alexx Perloff"]]
+#'''Jan-Frederik Schulte'''
+Scholars+=[["Emanuele Usai"]]
+#'''Hannsjoerg Weber'''
+#'''Zhenbin Wu'''
+# ''' 2020 graduate scholars '''
+Scholars+=[["Chin Lung Tan"]]
+Scholars+=[["Zhicai_Zhang"]]
+# ''' 2019 '''
+Scholars+=["Douglas Berry"]
+Scholars+=["Saptaparna Bhattacharya"]
+Scholars+=["Luca Cadamuro"] 
+Scholars+=["Yangyang Cheng"]
+Scholars+=["Mariarosaria D'Alfonso"]
+# '''Scholars+=["Nicola De Filippis"]'''
+Scholars+=["Javier Duarte"]
+Scholars+=["Sergei Gleyzer"]
+Scholars+=["Loukas Gouskos"]
+# '''Scholars+=["Alexander Grohsjean"]'''
+Scholars+=["Andreas Jung"]
+Scholars+=["Markus Klute"]
+Scholars+=["Daniel Noonan"]
+Scholars+=["Ana Ovcharova"]
+Scholars+=["Nathaniel Joseph Pastika"]
+Scholars+=["Kevin J. Pedro"]
+Scholars+=["Jan-Frederik Schulte"]
+Scholars+=["Nadja Strobbe"]
+Scholars+=["Hannsjoerg Weber"]
+Scholars+=["Zhenbin Wu"]
+Scholars+=["David Ren-Hwa Yu"]
+# ''' 2019 graduate scholars '''
+Scholars+=["Cristina Mantilla"]
+Scholars+=["Ka Hei Martin Kwok"]
+
+''' 2018 '''
+Scholars=["Yangyang Cheng"]
+'''Scholars+=["Nicola De Filippis"]'''
+Scholars+=["Matteo Cremonesi"]
+Scholars+=["Sergei Gleyzer"]
+Scholars+=["Abdollah Mohammadi"]
+Scholars+=["Norbert Neumeister"]
+Scholars+=["Isobel Rose Ojalvo"]
+Scholars+=["Nathaniel Joseph Pastika"]
+Scholars+=["Rishi Patel"]
+Scholars+=["Kevin J. Pedro"]
+Scholars+=["Justin R. Pilot"]
+'''Scholars+=["Roberto Rossin"]'''
+'''Scholars+=["Sezen Sekmen"]'''
+Scholars+=["Indara Suarez"]
+Scholars+=["Caterina Vernieri"]
+''' 2018 graduate scholars '''
+Scholars+=["Kamal_Lamichhane"]
+Scholars+=["Weinan Si"]
 ''' 2017 '''
-Scholars=["Claudio Campagnari"]
+Scholars+=["Claudio Campagnari"]
 Scholars+=["Ketino Kaadze"]
-Scholars+=["Bjoern Penning"]
-Scholars+=["Alexander Schmidt"]
+'''Scholars+=["Bjoern Penning"]'''
+'''Scholars+=["Alexander Schmidt"]'''
 Scholars+=["Jamie Antonelli"]
 Scholars+=["Jordan Damgov"]
 Scholars+=["Ben Kreis"]
 Scholars+=["Andrew Melo"]
 Scholars+=["Sezen Sekmen"]
-Scholars+=["Caterina Vernieri"]
 Scholars+=["Giovanni Zevi Della Porta"]
 Scholars+=["Ulrich Heintz"]
-Scholars+=["Norbert Neumeister"]
-Scholars+=["Roberto Rossin"]
-Scholars+=["Seema Sharma"]
+'''Scholars+=["Seema Sharma"]'''
 Scholars+=["Josh Bendavid"]
-Scholars+=["Julie managan Hogan"]
-Scholars+=["Matteo Cremonesi"]
-Scholars+=["Abdollah Mohammadi"]
+Scholars+=["Julie Managan"]
 Scholars+=["Marco Trovato"]
 Scholars+=["Marc Weinberg"]
 ''' 2017 graduate scholar '''
 Scholars+=["Ryan Mueller"]
-
+### comment out 2016 for 2019 survey?
 ''' 2016 '''
 ''' duplicates from above are removed '''
-'''Scholars=["Claudio Campagnari"]'''
-Scholars+=["Robin Erbacher"]
+'''Scholars+=["Robin Erbacher"]
 Scholars+=["Kenichi Hatakeyama"]
 Scholars+=["Christopher Hill"]
-'''Scholars+=["Ketino Kaadze"]'''
 Scholars+=["Luca Malgeri"]
-''' didn't add CERN to LPC_AboveWithScholars '''
-'''Scholars+=["Alexander Schmidt"]'''
-'''Scholars+=["Jamie Antonelli"]'''
 Scholars+=["Marco De Mattia"]
-'''Scholars+=["Ben Kreis"]'''
 Scholars+=["Edward Laird"]
 Scholars+=["Jacob Linacre"]
 Scholars+=["Ivan Marchesini"]
@@ -55,22 +111,28 @@ Scholars+=["Justin Pilot"]
 Scholars+=["Lovedeep Saini"]
 Scholars+=["Lesya Shchutska"]
 Scholars+=["Markus Stoye"]
-''' didn't add CERN to LPC_AboveWithScholars '''
 Scholars+=["John Stupak"]
 Scholars+=["Matthew Walker"]
 Scholars+=["Andrew Whitbeck"]
-Scholars+=["Si Xie"]
-
+Scholars+=["Si Xie"]'''
+'''Scholars+=["Claudio Campagnari"]'''
+''' didn't add CERN to LPC_AboveWithScholars '''
+'''Scholars+=["Jamie Antonelli"]'''
+'''Scholars+=["Ben Kreis"]'''
+'''Scholars+=["Ketino Kaadze"]'''
 ''' 2016 graduate scholars '''
-Scholars+=["David Sheffield"]
+'''Scholars+=["David Sheffield"]
 Scholars+=["Ali Celik"]
 Scholars+=["Sean-Jiun Wang"]
-Scholars+=["Rizki Syarif"]
+Scholars+=["Rizki Syarif"]'''
+
+# Modified 15 May 2019 after reviewing May 1 LPC survey results, people that indicated any answers in Q3-9
+LPC = ["ALABAMA-UNIV","BAYLOR-UNIV", "BOSTON-UNIV", "BROWN-UNIV", "CALTECH", "CARNEGIE-MELLON", "CHICAGO", "COLORADO", "CORNELL", "DEKALB-NIU", "FERMILAB", "FLORIDA-STATE", "FLORIDA-TECH",  "FLORIDA-UNIV", "IOWA", "JOHNS-HOPKINS", "KANSAS-STATE", "KANSAS-UNIV", "MARYLAND", "MINNESOTA", "MIT", "NEBRASKA", "NORTHEASTERN", "NORTHWESTERN", "NOTRE_DAME", "OHIO-STATE", "PRINCETON", "PUERTO_RICO", "PURDUE", "PURDUE-CALUMET", "RICE", "ROCHESTER", "RUTGERS", "SUNY-BUFFALO", "TENNESSEE", "TEXAS-TAMU", "TEXAS-TECH", "UCDAVIS", "UCLA", "UCRIVERSIDE", "UCSB", "UCSD", "VANDERBILT", "VIRGINIA-UNIV", "WASHINGTON-CUA", "WAYNE", "WISCONSIN"]
 
 # Modified 28 April 2017 with Cecilia and Boaz, intended to represent
 # institutions where people have a recent physical presence at LPC (keeping in 
 # mind people come and go)
-LPC = ["BAYLOR-UNIV", "BOSTON-UNIV", "BROWN-UNIV", "CALTECH", "CARNEGIE-MELLON", "CHICAGO", "COLORADO", "CORNELL", "FERMILAB", "FLORIDA-STATE", "FLORIDA-TECH",  "FLORIDA-UNIV", "IOWA", "JOHNS-HOPKINS", "KANSAS-STATE", "KANSAS-UNIV", "MINNESOTA", "NEBRASKA", "NORTHWESTERN", "OHIO-STATE", "PRINCETON", "PUERTO_RICO", "PURDUE", "PURDUE-CALUMET", "ROCHESTER", "ROCKEFELLER", "RUTGERS", "SUNY-BUFFALO", "TEXAS-TAMU", "TEXAS-TECH", "UCDAVIS", "UCSB", "UCSD", "VANDERBILT", "VIRGINIA-UNIV", "WAYNE", "WISCONSIN"]
+LPC_2017 = ["BAYLOR-UNIV", "BOSTON-UNIV", "BROWN-UNIV", "CALTECH", "CARNEGIE-MELLON", "CHICAGO", "COLORADO", "CORNELL", "FERMILAB", "FLORIDA-STATE", "FLORIDA-TECH",  "FLORIDA-UNIV", "IOWA", "JOHNS-HOPKINS", "KANSAS-STATE", "KANSAS-UNIV", "MINNESOTA", "NEBRASKA", "NORTHWESTERN", "OHIO-STATE", "PRINCETON", "PUERTO_RICO", "PURDUE", "PURDUE-CALUMET", "ROCHESTER", "ROCKEFELLER", "RUTGERS", "SUNY-BUFFALO", "TEXAS-TAMU", "TEXAS-TECH", "UCDAVIS", "UCSB", "UCSD", "VANDERBILT", "VIRGINIA-UNIV", "WAYNE", "WISCONSIN"]
 
 #Came with Metric code when I started April 2017
 LPC_ORIG = ["BAYLOR-UNIV", "BOSTON-UNIV", "BROWN-UNIV", "CARNEGIE-MELLON", "CHICAGO", "COLORADO", "CORNELL", "FERMILAB", "FLORIDA-FIU", "FLORIDA-STATE", "FLORIDA-TECH", "IOWA", "KANSAS-STATE", "KANSAS-UNIV", "LIVERMORE", "MINNESOTA", "MISSISSIPPI", "NEBRASKA", "NOTRE_DAME", "PUERTO_RICO", "PURDUE", "PURDUE-CALUMET", "ROCKEFELLER", "RUTGERS", "SUNY-BUFFALO", "TENNESSEE", "TEXAS-TAMU", "TEXAS-TECH", "VIRGINIA-UNIV"]
@@ -92,7 +154,7 @@ def isInLPC(institute):
     return False
 
 def load_usa_lpc_authors_csv():
-    f = open('data/LPCauthors-08November2017_fromLPCsurvey_GV_DR.csv', 'r')
+    f = open('data/LPCSurvey_1May2019_RSRFCOCQ3-9.csv', 'r')
     lines = f.read().split("\n")
     for line in lines[1:]:
         columns = line.split("|")
@@ -108,6 +170,7 @@ def load_usa_lpc_authors_csv():
 
             usa_lpc_authors[fname + " " + name] = isLPC
             usa_lpc_authors[name + " " + fname] = isLPC
+            print(fname + " " + name + " isLPC")
 
 json_file = open('data/sheet1.json', 'r')
 analysies_json = json.load(json_file)

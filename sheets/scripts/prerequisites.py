@@ -93,6 +93,7 @@ def fetchAnalyses():
     data3 = handle.getPage('http://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=3&awg=any')
 # May '17 have 1,866, so may need to go above p=2 soonish
 # May '18 have 2,017, so have to do 3 pages
+# June 2020 have 2,310, still 3 pages
 
     data = data1 + data2 + data3
     
@@ -142,16 +143,30 @@ def fetchANotes():
     f.close()
 
 # ---------------------------------- #
+# countries = ["Armenia", "Austria", "Belarus", "Belgium",
+#              "Brazil", "Bulgaria", "China", "Colombia",
+#              "Croatia", "Cyprus", "Czech Republic", "Egypt",
+#              "Estonia", "Finland", "France", "Georgia",
+#              "Germany", "Greece", "Hungary", "India",
+#              "Iran", "Ireland", "Italy", "Korea", "Lithuania",
+#              "Malaysia", "Mexico", "Netherlands", "New Zealand",
+#              "Pakistan", "Poland", "Portugal", "Russia",
+#              "Serbia", "Spain", "Switzerland", "Taiwan", "Thailand",
+#              "Turkey", "Ukraine", "United Kingdom", "USA", "USA2", "Uzbekistan"]
+# ---------------------------------- #
+# new countries, Sep 2018
 countries = ["Armenia", "Austria", "Belarus", "Belgium",
              "Brazil", "Bulgaria", "China", "Colombia",
              "Croatia", "Cyprus", "Czech Republic", "Egypt",
              "Estonia", "Finland", "France", "Georgia",
              "Germany", "Greece", "Hungary", "India",
-             "Iran", "Ireland", "Italy", "Korea", "Lithuania",
-             "Malaysia", "Mexico", "Netherlands", "New Zealand",
-             "Pakistan", "Poland", "Portugal", "Russia",
-             "Serbia", "Spain", "Switzerland", "Taiwan", "Thailand",
-             "Turkey", "Ukraine", "United Kingdom", "USA", "USA2", "Uzbekistan"]
+             "Iran", "Ireland", "Italy", "Korea", "Latvia",
+             "Lebanon", "Lithuania", "Malaysia", "Mexico",
+             "Montenegro", "Netherlands", "New Zealand", "Oman",
+             "Pakistan", "Poland", "Portugal", "Russia", "Saudi Arabia",
+             "Serbia", "Spain", "Sri Lanka", "Switzerland", 
+             "Taiwan", "Thailand", "Turkey", "Ukraine", "United Kingdom", 
+             "USA", "USA2", "Uzbekistan"]
 def fetchAuthors():
     global handle
     url = 'http://cms.cern.ch/iCMS/jsp/secr/sqlCountryMembers.jsp?country='
