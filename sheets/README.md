@@ -43,7 +43,6 @@ In case of unrecoverable error:
 2. try again `./generate_sheets.sh`
 
 3. if problem persist contact https://lpc.fnal.gov/computing/gethelp.shtml
-```
 **Make plots**
 1) backup your current results
 ```
