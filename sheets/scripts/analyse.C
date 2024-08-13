@@ -35,7 +35,7 @@ static const char category[6][30] ={"Inactive", "Published", "PAS-Only PUB", "Ac
 // Published+PAS-Only-PUB 4
 // Published+PAS-Only-PUB+Active 5
     int LeastYear(){
-        return 18;
+        return 20;
     }
     
 void categories3bin(std::map<TString,int> map40,
@@ -1380,9 +1380,9 @@ THStack* tstack(int bin, TH2* histo, TH2F* US, TH2F* US_LPC, TH2F* US_nonLP, str
 
 void startTableHTML() {
     theTableHTML << "<html><head></head><body><center><table style='width:50%'><tbody>" << std::endl;
-    theTableHTML << "<br>Plots below use papers from 2018-2020.<br>" << std::endl;
-    theTableHTML << "<br>CADI queried Sep 16, 2020 3:00pm<br>" << std::endl;
-    theTableHTML << "Plots that have 'New' in the names use April-May 1, 2019 LPC survey + 2017-2020 DR(US) + 2017-2020 G&V(US) for LPC assignment."  << std::endl;
+    theTableHTML << "<br>Plots below use papers from 2020-2023.<br>" << std::endl;
+    theTableHTML << "<br>CADI queried May 31, 2023 3:00pm central<br>" << std::endl;
+    theTableHTML << "Plots that have 'New' in the names use April-May 1, 2019 LPC survey + 2016-2022 DR(US) + 2016-2022 G&V(US) + 2021 AI (US) + listserv subscribers + login history for LPC assignment (queried Sep 2022)."  << std::endl;
     theTableHTML << "<br>Plots with <i>Scholars</i> in the name use Distinguished Researchers for selection.<br>"<< std::endl;
 }
 

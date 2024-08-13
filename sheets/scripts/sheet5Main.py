@@ -10,27 +10,64 @@ Created on Sep 24, 2013
 import json
 
 ''' Remove non-USCMS institutions: LPC Scholars '''
+# ''' 2022 '''
+Scholars=["Samuel Bein"]
+Scholars+=["Philip Chang"]
+Scholars+=["Karri DiPetrillo"]
+Scholars+=["Raffaele Gerosa"]
+#'''Scholars+=["Clemens Lange"]'''
+Scholars+=["Jingyu Luo"]
+Scholars+=["Christine McLean"]
+Scholars+=["Deborah Pinna"]
+Scholars+=["Daniel Spitzbart"]
+Scholars+=["David Yu"]
+Scholars+=["Fengwangdong Zhang"]
+Scholars+=["Jingyu Zhang"]
+# ''' 2022 GS'''
+Scholars+=["Ryan Kim"]
+Scholars+=["Farrah Simpson"]
+# ''' 2021 '''
+Scholars+=["Aram Apyan"]
+Scholars+=["Allison Hall"]
+Scholars+=["Christopher Palmer"]
+Scholars+=["Alexx Perloff"]
+#'''Scholars+=["Philip Chang"]'''
+#'''Scholars+=["Christine McLean"]'''
+Scholars+=["Emanuele Usai"]
+Scholars+=["Fabio Ravera"]
+Scholars+=["Rajdeep Chatterjee"]
+Scholars+=["Kevin Nash"]
+Scholars+=["Sven Dildick"]
+Scholars+=["Roger Rusack"]
+#''' 2021 AI fellows'''
+Scholars+=["Matteo Cremonesi"]
+Scholars+=["Raghav Kansal"]
+Scholars+=["Jean-Roch Vlimant"]
+# ''' 2021 GS'''
+Scholars+=["Daniel Guerrero"]
+Scholars+=["Doyeong_Kim"]
 # ''' 2020 '''
+# ''' duplicates commented out
 #'''Saptaparna Bhattacharya'''
-Scholars=["Freya Blekman"]
+Scholars+=["Freya Blekman"]
 #'''Luca Cadamuro
 #'''Mariarosaria D'Alfonso'''
-Scholars+=[["Aran Garcia-Bellido"]]
-Scholars+=[["Yuri Gershtein"]]
-Scholars+=[["Alexander Grohsjean"]]
-Scholars+=[["Allison Hall"]]
-Scholars+=[["Henning Kirschenmann"]]
-Scholars+=[["Miaoyuan Liu"]]
+Scholars+=["Aran Garcia-Bellido"]
+Scholars+=["Yuri Gershtein"]
+Scholars+=["Alexander Grohsjean"]
+#'''Scholars+=[["Allison Hall"]]
+Scholars+=["Henning Kirschenmann"]
+Scholars+=["Miaoyuan Liu"]
 #'''Daniel Noonan'''
-Scholars+=[["Christopher Palmer"]]
-Scholars+=[["Alexx Perloff"]]
+#'''Scholars+=[["Christopher Palmer"]]
+#'''Scholars+=[["Alexx Perloff"]]
 #'''Jan-Frederik Schulte'''
-Scholars+=[["Emanuele Usai"]]
+#'''Scholars+=[["Emanuele Usai"]]
 #'''Hannsjoerg Weber'''
 #'''Zhenbin Wu'''
 # ''' 2020 graduate scholars '''
-Scholars+=[["Chin Lung Tan"]]
-Scholars+=[["Zhicai_Zhang"]]
+Scholars+=["Chin Lung Tan"]
+Scholars+=["Zhicai_Zhang"]
 # ''' 2019 '''
 Scholars+=["Douglas Berry"]
 Scholars+=["Saptaparna Bhattacharya"]
@@ -52,14 +89,15 @@ Scholars+=["Jan-Frederik Schulte"]
 Scholars+=["Nadja Strobbe"]
 Scholars+=["Hannsjoerg Weber"]
 Scholars+=["Zhenbin Wu"]
-Scholars+=["David Ren-Hwa Yu"]
+#'''Scholars+=["David Yu"]'''
+# '''Scholars+=["David Ren-Hwa Yu"]'''
 # ''' 2019 graduate scholars '''
 Scholars+=["Cristina Mantilla"]
 Scholars+=["Ka Hei Martin Kwok"]
 
-''' 2018 '''
-Scholars=["Yangyang Cheng"]
-'''Scholars+=["Nicola De Filippis"]'''
+#''' 2018 '''
+Scholars+=["Yangyang Cheng"]
+#'''Scholars+=["Nicola De Filippis"]'''
 Scholars+=["Matteo Cremonesi"]
 Scholars+=["Sergei Gleyzer"]
 Scholars+=["Abdollah Mohammadi"]
@@ -69,18 +107,18 @@ Scholars+=["Nathaniel Joseph Pastika"]
 Scholars+=["Rishi Patel"]
 Scholars+=["Kevin J. Pedro"]
 Scholars+=["Justin R. Pilot"]
-'''Scholars+=["Roberto Rossin"]'''
-'''Scholars+=["Sezen Sekmen"]'''
+#'''Scholars+=["Roberto Rossin"]'''
+#'''Scholars+=["Sezen Sekmen"]'''
 Scholars+=["Indara Suarez"]
 Scholars+=["Caterina Vernieri"]
-''' 2018 graduate scholars '''
+#''' 2018 graduate scholars '''
 Scholars+=["Kamal_Lamichhane"]
 Scholars+=["Weinan Si"]
-''' 2017 '''
+#''' 2017 '''
 Scholars+=["Claudio Campagnari"]
 Scholars+=["Ketino Kaadze"]
-'''Scholars+=["Bjoern Penning"]'''
-'''Scholars+=["Alexander Schmidt"]'''
+#'''Scholars+=["Bjoern Penning"]'''
+#'''Scholars+=["Alexander Schmidt"]'''
 Scholars+=["Jamie Antonelli"]
 Scholars+=["Jordan Damgov"]
 Scholars+=["Ben Kreis"]
@@ -88,17 +126,17 @@ Scholars+=["Andrew Melo"]
 Scholars+=["Sezen Sekmen"]
 Scholars+=["Giovanni Zevi Della Porta"]
 Scholars+=["Ulrich Heintz"]
-'''Scholars+=["Seema Sharma"]'''
+#'''Scholars+=["Seema Sharma"]'''
 Scholars+=["Josh Bendavid"]
 Scholars+=["Julie Managan"]
 Scholars+=["Marco Trovato"]
 Scholars+=["Marc Weinberg"]
-''' 2017 graduate scholar '''
+#''' 2017 graduate scholar '''
 Scholars+=["Ryan Mueller"]
 ### comment out 2016 for 2019 survey?
-''' 2016 '''
-''' duplicates from above are removed '''
-'''Scholars+=["Robin Erbacher"]
+#''' 2016 '''
+#''' duplicates from above are removed '''
+Scholars+=["Robin Erbacher"]
 Scholars+=["Kenichi Hatakeyama"]
 Scholars+=["Christopher Hill"]
 Scholars+=["Luca Malgeri"]
@@ -114,17 +152,17 @@ Scholars+=["Markus Stoye"]
 Scholars+=["John Stupak"]
 Scholars+=["Matthew Walker"]
 Scholars+=["Andrew Whitbeck"]
-Scholars+=["Si Xie"]'''
-'''Scholars+=["Claudio Campagnari"]'''
-''' didn't add CERN to LPC_AboveWithScholars '''
-'''Scholars+=["Jamie Antonelli"]'''
-'''Scholars+=["Ben Kreis"]'''
-'''Scholars+=["Ketino Kaadze"]'''
-''' 2016 graduate scholars '''
-'''Scholars+=["David Sheffield"]
+Scholars+=["Si Xie"]
+#'''Scholars+=["Claudio Campagnari"]'''
+#''' didn't add CERN to LPC_AboveWithScholars '''
+#'''Scholars+=["Jamie Antonelli"]'''
+#'''Scholars+=["Ben Kreis"]'''
+#'''Scholars+=["Ketino Kaadze"]'''
+#''' 2016 graduate scholars '''
+Scholars+=["David Sheffield"]
 Scholars+=["Ali Celik"]
 Scholars+=["Sean-Jiun Wang"]
-Scholars+=["Rizki Syarif"]'''
+Scholars+=["Rizki Syarif"]
 
 # Modified 15 May 2019 after reviewing May 1 LPC survey results, people that indicated any answers in Q3-9
 LPC = ["ALABAMA-UNIV","BAYLOR-UNIV", "BOSTON-UNIV", "BROWN-UNIV", "CALTECH", "CARNEGIE-MELLON", "CHICAGO", "COLORADO", "CORNELL", "DEKALB-NIU", "FERMILAB", "FLORIDA-STATE", "FLORIDA-TECH",  "FLORIDA-UNIV", "IOWA", "JOHNS-HOPKINS", "KANSAS-STATE", "KANSAS-UNIV", "MARYLAND", "MINNESOTA", "MIT", "NEBRASKA", "NORTHEASTERN", "NORTHWESTERN", "NOTRE_DAME", "OHIO-STATE", "PRINCETON", "PUERTO_RICO", "PURDUE", "PURDUE-CALUMET", "RICE", "ROCHESTER", "RUTGERS", "SUNY-BUFFALO", "TENNESSEE", "TEXAS-TAMU", "TEXAS-TECH", "UCDAVIS", "UCLA", "UCRIVERSIDE", "UCSB", "UCSD", "VANDERBILT", "VIRGINIA-UNIV", "WASHINGTON-CUA", "WAYNE", "WISCONSIN"]
@@ -154,7 +192,7 @@ def isInLPC(institute):
     return False
 
 def load_usa_lpc_authors_csv():
-    f = open('data/LPCSurvey_1May2019_RSRFCOCQ3-9.csv', 'r')
+    f = open('data/iCMS_New_All_15Aug2022_noonCDT_LPC_fakeSurvey.csv', 'r')
     lines = f.read().split("\n")
     for line in lines[1:]:
         columns = line.split("|")

@@ -137,7 +137,7 @@ def fetchAnalyses():
     print "Done"
 
 def fetchANotes():
-    data = handle.getPage('http://cms.cern.ch/iCMS/user/annotes')
+    data = handle.getPage('https://icms.cern.ch/tools/idProvider/demand/http://cms.cern.ch/iCMS/user/annotes')
     f = open("data/annotes.html", "w")
     f.write(data)
     f.close()
@@ -191,6 +191,7 @@ def fetchDetailPage(anotes_id):
 
     url = 'http://cms.cern.ch/iCMS/jsp/db_notes/showNoteDetails.jsp?noteID='
     data = handle.getPage(url + anotes_id.replace(' ', '%20'))
+#    print "detail note data: " + data
     f = open("data/detail_pages/%s.html" % anotes_id.replace('/', '_'), "w")
     f.write(data)
     f.close()
@@ -224,7 +225,7 @@ if not os.path.isfile("data/analyses.html"):
 if not os.path.isfile("data/annotes.html"):
     if handle == None:
         handle = Login()
-    fetchANotes()
+#    fetchANotes()
 
 if not os.path.exists("data/authors"):
     os.makedirs("data/authors")

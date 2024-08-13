@@ -156,7 +156,7 @@ def CheckDate(entry, format):
 
 def load_usa_lpc_members_csv():
     usa_lpc_members = {}
-    LPC = Read('data/LPCSurvey_1May2019_RSRFCOCQ3-9.csv').split('\n')
+    LPC = Read('data/iCMS_New_All_15Aug2022_noonCDT_LPC_fakeSurvey.csv').split('\n')
     for line in LPC[1:]:
         columns = line.split("|")
         if len(columns) > 6:
