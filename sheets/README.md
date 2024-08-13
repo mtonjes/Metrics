@@ -1,3 +1,4 @@
+Sadly this is all python2 SL7 code and updated for CERN SSO but not 2FA
 **Query CADI; Make sheets**
 Instructions how to generate CADI sheets (presumably you have already setup an appropriate CMSSW working area on lxplus7.cern.ch (this does not work remote from CERN currently)):
 
