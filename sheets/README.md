@@ -1,19 +1,21 @@
 Sadly this is all python2 SL7 code and updated for CERN SSO but not 2FA
+
+
 **Query CADI; Make sheets**
 Instructions how to generate CADI sheets (presumably you have already setup an appropriate CMSSW working area on lxplus7.cern.ch (this does not work remote from CERN currently)):
 
 ```
-> git clone https://github.com/mtonjes/Metrics.git
+git clone https://github.com/mtonjes/Metrics.git
 
-> cd Metrics/sheets
+cd Metrics/sheets
 
-> voms-proxy-init --valid 168:00 -voms cms
+voms-proxy-init --valid 168:00 -voms cms
 
-> cd CMSSW_10_6_1/src
+cd CMSSW_10_6_1/src
 
-> cmsenv
+cmsenv
 
-> cd -
+cd -
 
 ```
 Code check: Login to iCMS (http://cms.cern.ch/iCMS)
@@ -43,12 +45,15 @@ In case of unrecoverable error:
 2. try again `./generate_sheets.sh`
 
 3. if problem persist contact https://lpc.fnal.gov/computing/gethelp.shtml
+
 **Make plots**
 1) backup your current results
+
 ```
 cd Metrics
 cp -pr sheets sheets_TodayDate
 ```
+
 2) Make plots directory and copy sheets5.csv
 ```
 cd sheets
