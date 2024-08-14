@@ -3,4 +3,3 @@ class Author(object):
         self.fullname=fullname
         self.country=country
         self.institute=institute
-    

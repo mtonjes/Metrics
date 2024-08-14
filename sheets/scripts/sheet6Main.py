@@ -1,23 +1,23 @@
 import json, os
 from BeautifulSoup import BeautifulSoup
-
+#
 def Read(fn):
     fh = open(fn)
     data = fh.read()
     fh.close()
     return data
-
+#
 def Write(fn, data):
     fh = open(fn, 'w')
     fh.write(data)
     fh.close()
-
+#
 def LoadJSON(fn):
     return json.loads(Read(fn))
-
+#
 def WriteJSON(fn, data):
     Write(fn, json.dumps(data, indent = 1))
-
+#
 def TableParser(fn):
     html  = Read(fn)
     soup  = BeautifulSoup(html)
@@ -27,10 +27,10 @@ def TableParser(fn):
     heads = []
     # extract headers
     for th in thead.findAll('th'): heads.append(th.text)
-
+#
     # table content will be pushed into data list
     data  = []
-
+#
     # extract table content
     for tr in tbody.findAll('tr'):
         counter = 0
@@ -40,42 +40,42 @@ def TableParser(fn):
             counter += 1
         data.append(row)
     return data
-
+#
 def IsPhysicist(member):
     if member['ActivName'] == 'Physicist' and  member['Author'] == '1': return True
     return False
-
+#
 def IsGradStudent(member):
     if member['ActivName'] in ['Doctoral Student'] and member['StatusCMS'] == 'CMS': return True
     return False
-
+#
 def IsGradStudent2(member):
     if member['ActivName'] in ['Doctoral Student']: return True
-
+#
 def GetLPC(arr):
     l = []
     for i in arr:
         if IsLPC(i): l.append(i)
     return l
-
+#
 def GetPhysicists(arr):
     l = []
     for i in arr:
         if IsPhysicist(i): l.append(i)
     return l
-
+#
 def GetGradStudents(arr):
     l = []
     for i in arr:
         if IsGradStudent2(i): l.append(i)
     return l
-
+#
 def Get2012(arr):
     l = []
     for i in arr:
         if CheckDate(i['EXYear'], 'EXY'): l.append(i)
     return l
-
+#
 # Flintstone style coding (we didn't have enough time to keep it siple and stupid)
 def FixName(name):
     if name == 'Smith Wesley': return 'Smith Wesley H.'
@@ -118,14 +118,14 @@ def FixName(name):
     elif name == 'Edwards-bruner Christopher Ryan': return 'Bruner Christopher'
     elif name == 'Wuerthwein Frank Karl': return 'Wuerthwein Frank'
     return name
-
+#
 def FindMember(memberName):
     memberName = FixName(memberName)
     for i in data:
         if '%(NameCMS)s %(NamfCMS)s' % i == memberName: return i
         elif '%(NamfCMS)s %(NameCMS)s' % i == memberName: return i
     return {}
-
+#
 def IsPublished(status):
     # hardcoded paper statuses
     s = ["SUB (Paper has been submitted to journal)",
@@ -134,12 +134,12 @@ def IsPublished(status):
     for i in s:
         if i in status: return 1
     return 0
-
+#
 def IsLPC(member):
     name = "%s %s" % (member['NamfCMS'], member['NameCMS'])
-    if USALPC.has_key(name) and USALPC[name]: return True
+    if name in USALPC and USALPC[name]: return True
     return False
-
+#
 def CheckDate(entry, format):
     if format == 'AN':
         entry = entry[len('CMS AN-'):entry.find('/')]
@@ -153,7 +153,7 @@ def CheckDate(entry, format):
     if not type(entry) == int: return False
     if entry >= 2012: return True
     return False
-
+#
 def load_usa_lpc_members_csv():
     usa_lpc_members = {}
     LPC = Read('data/iCMS_New_All_15Aug2022_noonCDT_LPC_fakeSurvey.csv').split('\n')
@@ -170,21 +170,21 @@ def load_usa_lpc_members_csv():
             usa_lpc_members[fname + " " + name] = isLPC
             usa_lpc_members[name + " " + fname] = isLPC
     return usa_lpc_members
-
+#
 data = TableParser('data/authors/USA2.html')
-
+#
 # load ANs
 sheet2     = LoadJSON("data/sheet2.json")
-
+#
 # load CADI papers
 sheet1     = LoadJSON("data/sheet1.json")
 USALPC     = load_usa_lpc_members_csv()
 Sheet      = {}
-
+#
 # add all USA institutes
 for row in data:
     if not row['InstCode'] in Sheet: Sheet[row['InstCode']] = {}
-
+#
 # find all physicists & grad students
 Physicists = {}
 Grads = {}
@@ -204,7 +204,7 @@ for inst in Sheet:
     Sheet[inst]['# of grad students'] = len(Grads[inst])
     Sheet[inst]['# of grad students from LPC'] = len(GetLPC(Grads[inst]))
     Sheet[inst]['USCMS (grads & physicisits)'] = len(GP[inst])
-
+#
 # CADI columns
 CADIEntries = {}
 CADIAuthors = {}
@@ -220,7 +220,7 @@ for CADIEntry in sheet1:
             auth = FindMember(author)
             if ANInfo['authors'][author]['country'] != 'USA': continue
             if not auth:
-                print 'Warning: "%s" not found! Task dump: CADI -> %s -> %s' % (author, CADIEntry, AN); continue
+                print('Warning: "%s" not found! Task dump: CADI -> %s -> %s' % (author, CADIEntry, AN)); continue
             if not auth      in CADIAuthors[auth['InstCode']] and (IsGradStudent2(auth) or IsPhysicist(auth)):
                 CADIAuthors[auth['InstCode']].append(auth)
             if not CADIEntry in CADIEntries[auth['InstCode']] and (IsGradStudent2(auth) or IsPhysicist(auth)):
@@ -230,23 +230,23 @@ for inst in Sheet:
     Sheet[inst]['# of CADI entries [2012 - )'] = 0
     for entry in CADIEntries[inst]:
         if CheckDate(sheet1[entry]['date'], 'CEntry'): Sheet[inst]['# of CADI entries [2012 - )'] += 1
-
+#
     Sheet[inst]['# of CADI authors'] = len(CADIAuthors[inst])
     Sheet[inst]['# of CADI authors PHY'] = len(GetPhysicists(CADIAuthors[inst]))
     Sheet[inst]['# of CADI authors GRAD'] = len(GetGradStudents(CADIAuthors[inst]))
-
+#
     Sheet[inst]['# of CADI authors [2012 - )'] = len(Get2012(CADIAuthors[inst]))
     Sheet[inst]['# of CADI authors [2012 - ) PHY'] = len(GetPhysicists(Get2012(CADIAuthors[inst])))
     Sheet[inst]['# of CADI authors [2012 - ) GRAD'] = len(GetGradStudents(Get2012(CADIAuthors[inst])))
-
+#
     Sheet[inst]['# of CADI authors from LPC'] = len(GetLPC(CADIAuthors[inst]))
     Sheet[inst]['# of CADI authors from LPC PHY'] = len(GetPhysicists(GetLPC(CADIAuthors[inst])))
     Sheet[inst]['# of CADI authors from LPC GRAD'] = len(GetGradStudents(GetLPC(CADIAuthors[inst])))
-
+#
     Sheet[inst]['# of CADI authors from LPC [2012 - )'] = len(Get2012(GetLPC(CADIAuthors[inst])))
     Sheet[inst]['# of CADI authors from LPC [2012 - ) PHY'] = len(GetPhysicists(Get2012(GetLPC(CADIAuthors[inst]))))
     Sheet[inst]['# of CADI authors from LPC [2012 - ) GRAD'] = len(GetGradStudents(Get2012(GetLPC(CADIAuthors[inst]))))
-
+#
 # AN columns
 ANs       = {}
 ANAuthors = {}
@@ -259,7 +259,7 @@ for AN in sheet2:
         if ANInfo['authors'][author]['country'] != 'USA': continue
         auth = FindMember(author)
         if not auth:
-            print 'Warning: "%s" not found! Task dump: AN -> %s' % (author, AN); continue
+            print('Warning: "%s" not found! Task dump: AN -> %s' % (author, AN)); continue
         if not auth in ANAuthors[auth['InstCode']] and (IsGradStudent2(auth) or IsPhysicist(auth)): ANAuthors[auth['InstCode']].append(auth)
         if not AN   in ANs[auth['InstCode']] and (IsGradStudent2(auth) or IsPhysicist(auth)): ANs[auth['InstCode']].append(AN)
 for inst in Sheet:
@@ -267,24 +267,24 @@ for inst in Sheet:
     Sheet[inst]['# of ANs [2012 - )'] = 0
     for AN in ANs[inst]:
         if CheckDate(AN, 'AN'): Sheet[inst]['# of ANs [2012 - )'] += 1
-
+#
     Sheet[inst]['# of AN Authors'] = len(ANAuthors[inst])
     Sheet[inst]['# of AN Authors PHY'] = len(GetPhysicists(ANAuthors[inst]))
     Sheet[inst]['# of AN Authors GRAD'] = len(GetGradStudents((ANAuthors[inst])))
-
-
+#
+#
     Sheet[inst]['# of AN Authors [2012 - )'] = len(Get2012(ANAuthors[inst]))
     Sheet[inst]['# of AN Authors [2012 - ) PHY'] = len(GetPhysicists(Get2012(ANAuthors[inst])))
     Sheet[inst]['# of AN Authors [2012 - ) GRAD'] = len(GetGradStudents(Get2012(ANAuthors[inst])))
-
+#
     Sheet[inst]['# of AN Authors from LPC']  = len(GetLPC(ANAuthors[inst]))
     Sheet[inst]['# of AN Authors from LPC PHY']  = len(GetLPC(GetPhysicists(ANAuthors[inst])))
     Sheet[inst]['# of AN Authors from LPC GRAD']  = len(GetLPC(GetGradStudents(ANAuthors[inst])))
-
+#
     Sheet[inst]['# of AN Authors from LPC [2012 - )']  = len(Get2012(GetLPC(ANAuthors[inst])))
     Sheet[inst]['# of AN Authors from LPC [2012 - ) PHY']  = len(Get2012(GetPhysicists(GetLPC(ANAuthors[inst]))))
     Sheet[inst]['# of AN Authors from LPC [2012 - ) GRAD']  = len(Get2012(GetGradStudents(GetLPC(ANAuthors[inst]))))
-
+#
 # CADI & ARC -special section-
 CADIPool       = []
 ARCPool        = []
@@ -294,14 +294,14 @@ for CADIEntry in sheet1:
     if not IsPublished(sheet1[CADIEntry]['status']): continue
     Entry = sheet1[CADIEntry]
     ARCMembers = Entry['arc_members']
-    if 'country' in Entry['chairperson'].keys():
+    if 'country' in list(Entry['chairperson'].keys()):
         ARCMembers[Entry['chairperson']['fullname']] = {'country' : Entry['chairperson']['country'], 'institute' : Entry['chairperson']['institute']}
     # CADI Line -> ARC
     for arc in ARCMembers:
         if Entry['arc_members'][arc]['country'] != 'USA': continue
         ARCInfo = FindMember(arc)
         if not ARCInfo:
-            print 'Warning: "%s" not found! Task dump: ARC/CADI (ARC side) Pool -> %s' % (arc, CADIEntry); continue
+            print('Warning: "%s" not found! Task dump: ARC/CADI (ARC side) Pool -> %s' % (arc, CADIEntry)); continue
         if not ARCInfo in ARCPool: ARCPool.append(ARCInfo)
     # CADI Line -> Notes
     for AN in Entry['notes']:
@@ -310,9 +310,9 @@ for CADIEntry in sheet1:
             auth = FindMember(author)
             if ANInfo['authors'][author]['country'] != 'USA': continue
             if not auth:
-                print 'Warning: "%s" not found! Task dump: ARC/CADI (CADI side) -> %s -> %s' % (author, CADIEntry, AN); continue
+                print('Warning: "%s" not found! Task dump: ARC/CADI (CADI side) -> %s -> %s' % (author, CADIEntry, AN)); continue
             if not auth in CADIPool: CADIPool.append(auth)
-for inst in Sheet.keys():
+for inst in list(Sheet.keys()):
     CADI = GetLPC(Get2012(CADIAuthors[inst]))
     AN   = GetLPC(Get2012(ANAuthors[inst]))
     LPCANCARC[inst] = []
@@ -329,27 +329,27 @@ for inst in LPCANCARC:
         ARCNames = ARCNames + '%s %s, ' % (i['NamfCMS'], i['NameCMS'])
     if not ARCNames: ARCNames = '-'
     else: ARCNames = ARCNames[0:len(ARCNames)]
-
+#
     CADINames = ''
     for i in LPCANCCADI[inst]:
         CADINames = CADINames + '%s %s, ' % (i['NamfCMS'], i['NameCMS'])
     if not CADINames: CADINames = '-'
     else: CADINames = CADINames[0:len(CADINames)]
-
+#
     Sheet[inst]['# of Authors have not contributed any ARCs'] = len(LPCANCARC[inst])
     Sheet[inst]['# of Authors have not contributed any ARCs PHY'] = len(GetPhysicists(LPCANCARC[inst]))
     Sheet[inst]['# of Authors have not contributed any ARCs GRAD'] = len(GetGradStudents(LPCANCARC[inst]))
-
+#
     Sheet[inst]['# of Authors have not contributed any CADI entries'] = len(LPCANCCADI[inst])
     Sheet[inst]['# of Authors have not contributed any CADI entries PHY'] = len(GetPhysicists(LPCANCCADI[inst]))
     Sheet[inst]['# of Authors have not contributed any CADI entries GRAD'] = len(GetGradStudents(LPCANCCADI[inst]))
     Sheet[inst]['Name List ARCs'] = ARCNames
     Sheet[inst]['Name List CADI entries'] = CADINames
-
+#
 csv = ""
 # write sheet 6
 if Sheet:
-    instList = Sheet.keys()
+    instList = list(Sheet.keys())
     instList.sort()
     headers  = ["# of physicists", "# of physicists from LPC", "# of grad students", "# of grad students from LPC", "USCMS (grads & physicisits)",
                 "# of CADI entries", "# of CADI entries [2012 - )", 

@@ -1,9 +1,9 @@
 ##!/bin/bash
 
-python scripts/prerequisites.py
+python3 scripts/prerequisites.py
 
 echo "Generating Sheet5"
-python scripts/sheet5Main.py
+python3 scripts/sheet5Main.py
 
 echo "Generating Sheet6"
-python scripts/sheet6Main.py
+python3 scripts/sheet6Main.py

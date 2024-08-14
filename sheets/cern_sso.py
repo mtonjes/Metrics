@@ -9,17 +9,17 @@ import hashlib
 from . import old_cern_sso
 from requests_gssapi import HTTPSPNEGOAuth, OPTIONAL
 from bs4 import BeautifulSoup
-
+#
 from http.cookiejar import MozillaCookieJar, Cookie
 from urllib.parse import parse_qs
-
-
+#
+#
 def save_cookies_lwp(cookiejar, filename):
     """Saves cookies from a requests.Session cookies member into a file in the Netscape format"""
-
+    #
     lwp_cookiejar = MozillaCookieJar()
     for c in cookiejar:
-        args = dict(vars(c).items())
+        args = dict(list(vars(c).items()))
         args["rest"] = args["_rest"]
         del args["_rest"]
         if args["expires"] == None:
@@ -31,21 +31,21 @@ def save_cookies_lwp(cookiejar, filename):
     if base_path:
         os.makedirs(base_path, exist_ok=True)
     lwp_cookiejar.save(filename, ignore_discard=True)
-
-
+#
+#
 def post_session_saml(session, response):
     """Performs the SAML POST request given a session and a successful Keycloak authentication response in SAML"""
-
+    #
     soup_saml = BeautifulSoup(response.text, features="html.parser")
     action = soup_saml.form.get("action")
     post_key = soup_saml.form.input.get("name")
     post_value = soup_saml.form.input.get("value")
     session.post(action, data={post_key: post_value})
-
-
+#
+#
 def login_with_kerberos(login_page, verify_cert, auth_hostname, silent):
     """Simulates a browser session to log in using SPNEGO protocol"""
-
+    #
     session = requests.Session()
     if not silent:
         logging.info("Fetching target URL and its redirects")
@@ -100,8 +100,8 @@ def login_with_kerberos(login_page, verify_cert, auth_hostname, silent):
         else:
             raise Exception("Login failed: {}".format(error_message))
     return session, r_kerberos_auth
-
-
+#
+#
 def get_error_message(response_html):
     soup_err_page = BeautifulSoup(response_html, features="html.parser")
     error_message = soup_err_page.find(id="kc-error-message")
@@ -109,11 +109,11 @@ def get_error_message(response_html):
         return None
     else:
         return error_message.find("p").text
-
-
+#
+#
 def save_sso_cookie(url, file, verify_cert, auth_hostname, silent=False):
     """Log in into a URL that redirects to the SSO and save the session cookies"""
-
+    #
     try:
         session, response = login_with_kerberos(
             url, verify_cert, auth_hostname, silent=silent)
@@ -130,8 +130,8 @@ def save_sso_cookie(url, file, verify_cert, auth_hostname, silent=False):
         logging.error(
             "An error occurred while trying to log in and save cookies.")
         raise e
-
-
+#
+#
 def get_sso_token(url, clientid, verify_cert, auth_hostname, auth_realm, silent=False):
     """Get an OIDC token by logging in in the Auhtorization URL using Kerberos
 
@@ -155,7 +155,7 @@ def get_sso_token(url, clientid, verify_cert, auth_hostname, auth_realm, silent=
         if authz_response["state"][0] != random_state:
             raise Exception(
                 "The authorization response doesn't contain the expected state value.")
-
+        #
         r = requests.post(
             "https://{}/auth/realms/{}/protocol/openid-connect/token".format(
                 auth_hostname, auth_realm
@@ -167,15 +167,15 @@ def get_sso_token(url, clientid, verify_cert, auth_hostname, auth_realm, silent=
                 "redirect_uri": url,
             },
         )
-
+        #
         if not silent:
             if not r.ok:
                 logging.error(
                     "The token response was not successful: {}".format(r.json()))
                 r.raise_for_status()
-
+        #
         token_response = r.json()
-
+        #
         return token_response["access_token"]
     except Exception as e:
         if not silent:
@@ -183,11 +183,11 @@ def get_sso_token(url, clientid, verify_cert, auth_hostname, auth_realm, silent=
                 "An error occurred while trying to fetch user token."
             )
         raise e
-
-
+#
+#
 def device_authorization_login(clientid, verify_cert, auth_hostname, auth_realm):
     """Get an OIDC token by using Device Authorization Grant
-
+    #
     :param clientid: Client ID of a public client with device authorization grant enabled.
     :param verify_cert: Verify certificate.
     :param auth_hostname: Keycloak hostname.
@@ -198,7 +198,7 @@ def device_authorization_login(clientid, verify_cert, auth_hostname, auth_realm)
     code_verifier = binascii.hexlify(os.urandom(96))
     code_challenge = base64.urlsafe_b64encode(
         hashlib.sha256(code_verifier).digest()).decode()
-
+    #
     r = requests.post(
         "https://{}/auth/realms/{}/protocol/openid-connect/auth/device".format(
             auth_hostname, auth_realm
@@ -211,7 +211,7 @@ def device_authorization_login(clientid, verify_cert, auth_hostname, auth_realm)
         },
         verify=verify_cert
     )
-
+    #
     if not r.ok:
         error_message = get_error_message(r.text)
         if error_message:
@@ -220,18 +220,18 @@ def device_authorization_login(clientid, verify_cert, auth_hostname, auth_realm)
         else:
             raise Exception(
                 "Authentication request failed: Device authorization response was not successful.")
-
+    #
     auth_response = r.json()
-
+    #
     print("CERN SINGLE SIGN-ON\n")
     print("On your tablet, phone or computer, go to: \n{auth_response['verification_uri']}")
     print("and enter the following code: \n{auth_response['user_code']}\n")
     print(
         "You may also open the following link directly and follow the instructions:\n{auth_response['verification_uri_complete']}\n")
     print("Waiting for login...")
-
+    #
     signed_in = False
-
+    #
     while not signed_in:
         time.sleep(5)
         r_token = requests.post(
@@ -249,11 +249,11 @@ def device_authorization_login(clientid, verify_cert, auth_hostname, auth_realm)
         logging.debug(
             "The token response was: {}".format(r_token.json()))
         signed_in = r_token.ok
-
+    #
     token_response = r_token.json()
     return token_response
-
-
+#
+#
 def public_token_exchange(clientid, audience, token, auth_hostname, auth_realm, verify_cert):
     r_token = requests.post(
         "https://{}/auth/realms/{}/protocol/openid-connect/token".format(
@@ -273,3 +273,4 @@ def public_token_exchange(clientid, audience, token, auth_hostname, auth_realm, 
             "The token exchange response was not successful: {}".format(r_token.json()))
         r_token.raise_for_status()
     return r_token.json()
+

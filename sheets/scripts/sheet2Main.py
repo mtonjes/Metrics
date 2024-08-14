@@ -4,11 +4,11 @@ Created on Oct 10, 2013
 @author: ali.mehmet.altundag@cern.ch
 
 '''
-
+#
 from BeautifulSoup import BeautifulSoup
 import csv, os, re, copy, json
 import time
-
+#
 countries = ["Armenia", "Austria", "Belarus", "Belgium",
              "Brazil", "Bulgaria", "China", "Colombia",
              "Croatia", "Cyprus", "Czech Republic", "Egypt",
@@ -21,14 +21,14 @@ countries = ["Armenia", "Austria", "Belarus", "Belgium",
              "Serbia", "Spain", "Sri Lanka", "Switzerland", 
              "Taiwan", "Thailand", "Turkey", "Ukraine", "United Kingdom", 
              "USA", "Uzbekistan"]
-
+#
 def parseANotes():
     f = open("data/annotes.html")
     source = f.read()
     f.close()
     bs     = BeautifulSoup(source)
     tr     = bs.findAll("tr", {})
-
+#
     CMSNoteIDIndex  = 0#0
     TitleIndex      = 6#1
     submitDateIndex = 1#2
@@ -36,11 +36,11 @@ def parseANotes():
     InstCodeIndex   = 3#4
     SubmitterIndex  = 4#5
     NauthIndex      = 5#6
-
+#
     # Data format:
     # [[CMSNoteID, Title, submitDate, Country, InstCode, Submitter, Nauth], ... ]
     CMSANNotes = []
-
+#
     for i in tr[1:len(tr)]:
         cells = i.findChildren('td')
         CMSANNotes.append([cells[CMSNoteIDIndex].text.encode('utf-8'),
@@ -51,23 +51,23 @@ def parseANotes():
                     cells[SubmitterIndex].text.encode('utf-8'),
                     cells[NauthIndex].text.encode('utf-8')])
     return CMSANNotes
-
+#
 parsedANotes = parseANotes()
-
+#
 def parseMemberInfo(fileName):
     f = open(fileName)
     source = f.read()
     f.close()
-
+#
     bs     = BeautifulSoup(source)
     tr     = bs.findAll("tr", {})
-
+#
     # first cells for labels
     cells           = tr[0].findChildren('th')
     counter         = 0
     NameCMSIndex = NamfCMSIndex = InstituteIndex = CountryIndex = 0
     NameCERNIndex = NamfCERNIndex = None
-
+#
     for i in cells:
         if "NameCMS".lower() in i.text.lower():
             NameCMSIndex    = counter
@@ -82,11 +82,11 @@ def parseMemberInfo(fileName):
         elif "NamfCERN".lower() in i.text.lower():
             NamfCERNIndex = counter
         counter += 1
-
+#
     # Data format:
     # [[NameCMS, NamfCMS, Institute, Country], ... ]
     data = []
-
+#
     user_id = 0
     # pass titles
     for i in tr[1:len(tr)]:
@@ -106,52 +106,52 @@ def parseMemberInfo(fileName):
                     ])
         user_id = user_id + 1
     return data
-
+#
 parsedMemberInfo = []
 for i in countries:
     #The USA has special situation, it has two pages and these pages have to be merged
     if i == "USA":
         continue
     parsedMemberInfo = parsedMemberInfo + parseMemberInfo("data/authors/%s.html" % i)
-
+#
 # Merge USA pages
 USA1   = parseMemberInfo("data/authors/USA.html")
 USA2   = parseMemberInfo("data/authors/USA2.html")
 USAMerged = copy.deepcopy(USA1)
-
+#
 def ishas(list_, item):
     for i in list_:
         if i[0] == item[0] and i[1] == item[1]:
             return True
     return False
-
+#
 for i in USA2:
     if not ishas(USA1, i):
         USAMerged.append(i)
 parsedMemberInfo = parsedMemberInfo + USAMerged
-
+#
 def getNameFromFile(fileName):
     f = open("data/detail_pages/%s.html" % fileName.replace('/', '_'))
     source  = f.read()
     f.close()
     bs    = BeautifulSoup(source)
     font  = bs.findAll("font", {})
-
+#
     authorsIndex = 0
     for i in font:
         if "Authors".lower() in i.text.lower():
             authorsIndex = authorsIndex +1
             break
         authorsIndex = authorsIndex + 1
-
+#
     if authorsIndex >= len(font) :
-        print "ERROR: FILENAME=",fileName
-        print "ERROR: AUTHORSINDEX=",authorsIndex," and FONT =",font
-        print "ERROR: SOURCE=",source
-
+        print("ERROR: FILENAME=",fileName)
+        print("ERROR: AUTHORSINDEX=",authorsIndex," and FONT =",font)
+        print("ERROR: SOURCE=",source)
+#
     if authorsIndex >= len(font) : return None
-    return font[authorsIndex].text.replace(u"~",  " ").encode('utf-8')
-
+    return font[authorsIndex].text.replace("~",  " ").encode('utf-8')
+#
 def digitTest(str_):
     if "0" in str_: return True
     if "1" in str_: return True
@@ -164,7 +164,7 @@ def digitTest(str_):
     if "8" in str_: return True
     if "9" in str_: return True
     return False
-
+#
 def blackList(str_):
     l = ['Armenia', 'Austria', 'Belarus', 'Belgium', 'Brazil', 'Bulgaria',
         'China', 'Colombia', 'Croatia', 'Cyprus', 'CzechRepublic', 'Egypt',
@@ -181,7 +181,7 @@ def blackList(str_):
         return True
     else:
         return False
-
+#
 def parseName(authors):
     names = []
     # remove new lines and some replacements
@@ -200,10 +200,10 @@ def parseName(authors):
         name = name.rstrip().lstrip().replace('\\', '').replace('{', '').replace('}', '')
         if not blackList(name) and name.count(' ') > 0:  names.append(name)
     return names
-
+#
 def openInSafariFromFile(fileName):
     os.system("open data/detail_pages/%s.html" % fileName.replace('/', '_').replace(' ', '\ '))
-
+#
 def match(names, theAN):
     IDs = []   # row numbers
     for i in names:
@@ -264,14 +264,14 @@ def match(names, theAN):
                 if c3 == theSimplifiedName:
                     IDs.append(counter)
                     nameFound = nameFound + 1
-                    print "NOTE: "+i+" was identified as "+firstName+' '+lastName+" by using the simplified name: "+theSimplifiedName
+                    print("NOTE: "+i+" was identified as "+firstName+' '+lastName+" by using the simplified name: "+theSimplifiedName)
             counter = counter + 1
         if (nameFound == 0):
             #openInSafariFromFile(theAN)
-            print theAN+": "+i+" not found"
+            print(theAN+": "+i+" not found")
 
     return IDs
-
+#
 def createCSV():
     csvfile         = open('sheets/sheet2.csv', 'wb')
     json_data       = {}
@@ -279,29 +279,29 @@ def createCSV():
     writer.writerow(['', "CMSNoteID", "Title", "submitDate", "Country",
                      "InstCode", "Submitter", "Nauth", "NauthUSA", "Sum of Found",
                      "Sum of Match", "Sum of Not Match", ''])
-
+#
     nProblematicAuthor=[]
-
+#
     for i in parsedANotes:
         authors         = []
         authors_line    = []
-
+#
         NauthUSA    = 0
         authorCount = int(i[6])
-
+#
         if getNameFromFile(i[0]) is None :
-            print "Problematic author: ",i[0]
+            print("Problematic author: ",i[0])
             nProblematicAuthor+=[i[0]]
             continue
         authors     = parseName(getNameFromFile(i[0]))
         matchResult = match(authors, i[0])
-
+#
         if authors: somofFound = len(authors)
         else: somofFound = 0
-
+#
         if matchResult: sumofMatch = len(matchResult)
         else: sumofMatch = 0
-
+#
         if len(matchResult) == authorCount:
             for j in matchResult:
                 if parsedMemberInfo[j][3] == 'USA': NauthUSA += 1
@@ -326,9 +326,9 @@ def createCSV():
                     authors_line.append("#not_found#")
                     authors_line.append("#not_found#")
                     authors_line.append("#not_found#")
-
+#
         writer.writerow(["", i[0], i[1], i[2], i[3], i[4], i[5], i[6], str(NauthUSA), str(somofFound), str(sumofMatch), str(somofFound - sumofMatch) ] + authors_line + [""])
-
+#
         json_data[i[0]] = {
             "title"     : i[1],
             "date"      : i[2],
@@ -341,14 +341,14 @@ def createCSV():
         json_data[i[0]]["authors"] = {}
         for j in range(len(authors_line)/3):
             json_data[i[0]]["authors"][authors_line[j*3]] = {"institute" : authors_line[j*3 + 1], "country" : authors_line[j*3 + 2]}
-
+#
     csvfile.close()
     json_file = open("data/sheet2.json", 'w')
     json_file.write(json.dumps(json_data, indent = 1))
     json_file.close()
-
-    print "Number of problematic author names: ",len(nProblematicAuthor)
-    print "Problematic author names in: ",nProblematicAuthor
-
+#
+    print("Number of problematic author names: ",len(nProblematicAuthor))
+    print("Problematic author names in: ",nProblematicAuthor)
+#
 createCSV()
-print "Done"
+print("Done")
