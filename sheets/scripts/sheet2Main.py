@@ -5,7 +5,7 @@ Created on Oct 10, 2013
 
 '''
 #
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import csv, os, re, copy, json
 import time
 #

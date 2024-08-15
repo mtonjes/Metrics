@@ -15,7 +15,7 @@ pp=pprint.PrettyPrinter(indent=2)
 from Note import Note
 from Author import Author
 #
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import re, json
 import time
 #

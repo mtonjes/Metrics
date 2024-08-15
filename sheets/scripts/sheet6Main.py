@@ -1,5 +1,5 @@
 import json, os
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 #
 def Read(fn):
     fh = open(fn)

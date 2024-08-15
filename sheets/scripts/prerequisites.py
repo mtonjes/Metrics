@@ -8,7 +8,7 @@ Last modification May 14, 2015
 (see git repo for history of modification and blaming)
 '''
 #
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import http.cookiejar, urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, getpass, os, re
 #
 import time
