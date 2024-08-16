@@ -20,13 +20,13 @@ def WriteJSON(fn, data):
 #
 def TableParser(fn):
     html  = Read(fn)
-    soup  = BeautifulSoup(html)
+    soup  = BeautifulSoup(html, "html.parser")
     table = soup.find('table')
     thead = table.find('thead')
     tbody = table.find('tbody')
     heads = []
     # extract headers
-    for th in thead.findAll('th'): heads.append(th.text)
+    for th in thead.findAll('th'): heads.append(th.text.strip())
 #
     # table content will be pushed into data list
     data  = []
@@ -39,6 +39,7 @@ def TableParser(fn):
             row[heads[counter]] = td.text
             counter += 1
         data.append(row)
+#        print(data)
     return data
 #
 def IsPhysicist(member):
