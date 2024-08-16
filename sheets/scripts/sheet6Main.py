@@ -26,6 +26,8 @@ def TableParser(fn):
     tbody = table.find('tbody')
     heads = []
     # extract headers
+    # fix for \n: 
+    # https://stackoverflow.com/questions/66703536/unable-to-strip-n-from-html-table-in-beautifulsoup
     for th in thead.findAll('th'): heads.append(th.text.strip())
 #
     # table content will be pushed into data list

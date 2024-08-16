@@ -109,7 +109,7 @@ def fetchAnalyses():
 #
     print("Retrieving the page for each analysis.\n")
 #
-    soup = BeautifulSoup(data)
+    soup = BeautifulSoup(data, "html.parser")
     trs = soup.findAll("tr",{ "class" : re.compile(r"^(odd|even)$") })
     print("Retrieving an individual HTML file takes 0.5 sec,")
     print("but there are {0} of them, so a rough estimation".format( len(trs) ))
@@ -240,7 +240,7 @@ def parseANotes():
     f = open("data/annotes.html")
     source = f.read()
     f.close()
-    bs     = BeautifulSoup(source)
+    bs     = BeautifulSoup(source, "html.parser")
     tr     = bs.findAll("tr", {})
 #
     CMSNoteIDIndex  = 0

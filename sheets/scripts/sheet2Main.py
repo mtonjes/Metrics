@@ -26,7 +26,7 @@ def parseANotes():
     f = open("data/annotes.html")
     source = f.read()
     f.close()
-    bs     = BeautifulSoup(source)
+    bs     = BeautifulSoup(source, "html.parser")
     tr     = bs.findAll("tr", {})
 #
     CMSNoteIDIndex  = 0#0
@@ -59,11 +59,13 @@ def parseMemberInfo(fileName):
     source = f.read()
     f.close()
 #
-    bs     = BeautifulSoup(source)
+    bs     = BeautifulSoup(source, "html.parser")
     tr     = bs.findAll("tr", {})
 #
     # first cells for labels
-    cells           = tr[0].findChildren('th')
+    ### might need to fix this th.text.strip()
+    cells           = tr[0].findChildren('th').text.strip()
+    print(cells)
     counter         = 0
     NameCMSIndex = NamfCMSIndex = InstituteIndex = CountryIndex = 0
     NameCERNIndex = NamfCERNIndex = None
@@ -134,7 +136,7 @@ def getNameFromFile(fileName):
     f = open("data/detail_pages/%s.html" % fileName.replace('/', '_'))
     source  = f.read()
     f.close()
-    bs    = BeautifulSoup(source)
+    bs    = BeautifulSoup(source, "html.parser")
     font  = bs.findAll("font", {})
 #
     authorsIndex = 0

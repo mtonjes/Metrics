@@ -37,7 +37,7 @@ def getCountry(institute_required):
     return ""
 #
 def person_info(html):
-    person_soup = BeautifulSoup(html)
+    person_soup = BeautifulSoup(html, "html.parser")
     if person_soup.find("a") == None:
         # To deal with ARC chair fields with no people info in them, for example: B2G-12-018
         print("No person")
@@ -57,7 +57,7 @@ def person_info(html):
     return Author(fullname, country, institute)
 #
 def note_info(html):
-    note_soup = BeautifulSoup(html)
+    note_soup = BeautifulSoup(html, "html.parser")
     code = note_soup.find("a").renderContents()
     code=code.strip()
     return Note("CMS " + code, getSubmitterInfo(code))
@@ -97,7 +97,7 @@ country_institute_json = json.load(json_file)
 #
 f = open("data/annotes.html", "rb");
 annotesHTML = f.read()
-annotes_soup = BeautifulSoup(annotesHTML)
+annotes_soup = BeautifulSoup(annotesHTML, "html.parser")
 annotes = annotes_soup.findAll("tr",{ "class" : re.compile(r"^(odd|even)$") })
 f.close()
 #
@@ -119,7 +119,7 @@ header += " | Total # of AN | Total # of AN Submitters from US"
 #
 out.write(header+"\n")
 #
-soup = BeautifulSoup(analysisListHTML)
+soup = BeautifulSoup(analysisListHTML, "html.parser")
 trs = soup.findAll("tr",{ "class" : re.compile(r"^(odd|even)$") })
 #
 pp.pprint(trs)
@@ -175,7 +175,7 @@ for tr in trs:
             inp = open("data/analyses/id_"+id+".html", "r")
             analysisHTML = inp.read()
 #
-        analysisSoup = BeautifulSoup(analysisHTML)
+        analysisSoup = BeautifulSoup(analysisHTML, "html.parser")
         atrs = analysisSoup.findAll("tr")
 #
         #Analysis CODE
