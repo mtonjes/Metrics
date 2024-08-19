@@ -9,86 +9,45 @@ Last modification May 14, 2015
 '''
 #
 from bs4 import BeautifulSoup
+import sys
+import subprocess
+import pathlib
+from pathlib import Path
 import http.cookiejar, urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, getpass, os, re
 #
 import time
 #
 # Source: http://stackoverflow.com/questions/13925983/login-to-website-using-urllib2-python-2-7
 # Modified for python3 https://docs.python.org/3/howto/urllib2.html
+# authentication (Andreas Pfeiffer)
+# authentication switched to auth-get-sso-cookie https://gitlab.cern.ch/-/snippets/1457
+# debugging assistance from Nick Manganelli - thanks!!!
 class Login:
     def __init__(self):
-        # The action/ target from the form
-        authentication_url = """https://cms.cern.ch/iCMS/analysisadmin/loginnice?url='/jsp/page.jsp?mode=news'"""
+        url = "https://icms.cern.ch/tools/"
+        cmd = 'ls -alh ~/private/sso-auth-cookie'
+#        cmd = 'auth-get-sso-cookie --outfile ~/private/sso-auth-cookie -u %s ;' % (url,)
+#        print("got sso-cookie to file ~/private/sso-auth-cookie")
+        self.contents = cmd
+#        print(cmd)
+        loginres=''
+#        print("in SSOgetPage.\n")
+        getFile += 'curl --silent --cookie-jar ~/private/sso-auth-cookie --cookie ~/private/sso-auth-cookie -k -L %s ' % (url,)
+        res=''
+        try:
+            res = subprocess.check_output(getFile, shell=True, stderr=subprocess.STDOUT)
+#            print( res.decode('utf-8') )
+        except Exception as e:
+            print ( "ERROR: got: %s" % (str(e),) )
+            print ( "    output: %s " % (str(res)) )
 
-        # Store the cookies and create an opener that will hold them
-        self.cj = http.cookiejar.CookieJar()
-        self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.cj))
-
-        # Add our headers
-        self.opener.addheaders = [('User-agent', 'RedditTesting')]
-
-        # Install our opener (note that this changes the global opener to the one
-        # we just made, but you can also just call opener.open() if you want)
-        urllib.request.install_opener(self.opener)
-#
-        password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
-        
-        # Input parameters we are going to send
-        payload = {
-            'username':None,
-            'password':None,
-            'login':'login'
-            }
-#
-        username = getpass.getuser()
-        password = getpass.getpass()
-        print("Please enter your password")
-#
-#        if not payload['username']:
-#            payload['username'] = input("Username:")
-#
-        if not payload["password"]:
-            payload["password"] = getpass.getpass()
-#
-        print("Thank you!")
-#
-#       implement password manager 
-        print(username)
-        password_mgr.add_password(None, authentication_url, username, password)
-        handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
-        # create "opener" (OpenerDirector instance)
-        opener = urllib.request.build_opener(handler)
-        
-        # Use urllib to encode the payload
-        data = urllib.parse.urlencode(payload)
-#
-        print("Thank you x2!")
-#
-        # Build our Request object (supplying 'data' makes it a POST)
-        req = urllib.request.Request(authentication_url, data)
-        #print(req)
-#
-        print("Thank you x3!")
-#
-        # Make the request and read the response
-        resp = urllib.request.urlopen(req)
-        print(resp)
-#
-        print("Thank you x4!")
-        
-#        req = opener.open
-#
-        self.contents = resp.read()
-#
-        print("Thank you x5!")
-        print(self.contents)
     def getPage(self, url):
         return urllib.request.urlopen(url).read()
 #
     def getLoginResponse(self):
         return self.contents
 #
-print("Out of login class")
+print("Out of SSO class")
 #
 def fetchAnalyses():
     print("Getting the list of analyses takes just a few seconds...")
@@ -112,7 +71,7 @@ def fetchAnalyses():
 #
     data = data1 + data2 + data3
  #   
-    f = open("data/analyses.html", "w")
+    f = open("data/analyses.html", "wb")
     f.write(data)
     f.close()
 #
@@ -142,7 +101,7 @@ def fetchAnalyses():
             id = firstPart[1].replace("line=","")
             #download analysis details page
             analysisHTML = handle.getPage("https://cms.cern.ch/iCMS/analysisadmin/getan?code="+id)
-            o = open("data/analyses/id_"+id+".html", "w")
+            o = open("data/analyses/id_"+id+".html", "wb")
             o.write(analysisHTML)
             o.close()
             if index%200 == 0:
@@ -153,7 +112,7 @@ def fetchAnalyses():
 #
 def fetchANotes():
     data = handle.getPage('https://icms.cern.ch/tools/idProvider/demand/https://cms.cern.ch/iCMS/user/annotes')
-    f = open("data/annotes.html", "w")
+    f = open("data/annotes.html", "wb")
     f.write(data)
     f.close()
 #
@@ -189,13 +148,13 @@ def fetchAuthors():
         if os.path.isfile("data/authors/%s.html" % i):
             continue
         else:
-            if not handle:
+#            if not handle:
                 handle = Login()
         if i == "USA2":
             data = handle.getPage('https://cms.cern.ch/iCMS/jsp/secr/stats/cmsUS.jsp')
         else:
             data = handle.getPage(url + i.replace(' ', '%20'))
-        f = open("data/authors/%s.html" % i, "w")
+        f = open("data/authors/%s.html" % i, "wb")
         f.write(data)
         f.close()
 #
@@ -207,7 +166,7 @@ def fetchDetailPage(anotes_id):
     url = 'https://cms.cern.ch/iCMS/jsp/db_notes/showNoteDetails.jsp?noteID='
     data = handle.getPage(url + anotes_id.replace(' ', '%20'))
 #    print "detail note data: " + data
-    f = open("data/detail_pages/%s.html" % anotes_id.replace('/', '_'), "w")
+    f = open("data/detail_pages/%s.html" % anotes_id.replace('/', '_'), "wb")
     f.write(data)
     f.close()
 #
@@ -240,7 +199,7 @@ if not os.path.isfile("data/analyses.html"):
 if not os.path.isfile("data/annotes.html"):
     if handle == None:
         handle = Login()
-#    fetchANotes()
+    fetchANotes()
 #
 if not os.path.exists("data/authors"):
     os.makedirs("data/authors")
@@ -285,6 +244,16 @@ parsedANotes = parseANotes()
 print(parsedANotes)
 #
 for i in parsedANotes:
-    if not os.path.isfile("data/detail_pages/%s.html" % i[0].replace('/', '_')):
-        fetchDetailPage(i[0])
+#    so much debugging printing
+#     print("going to check string contents of i[0]") 
+#     print(str(i[0])) 
+#     print("\n") 
+#     print("going to check type of i[0]") 
+#     print(type(i[0])) 
+    myAN = i[0].decode(encoding='utf-8').replace('/', '_')
+    myFile = Path(f"data/detail_pages/{myAN}.html")
+    if not myFile.exists():
+# previous prequisites code
+#    if not os.path.exists("data/detail_pages/%s.html" % i[0].replace('/', '_')):
+        fetchDetailPage(myAN)
 # ---------------------------------- #
