@@ -14,7 +14,7 @@ import http.cookiejar, urllib.request, urllib.parse, urllib.error, urllib.reques
 import time
 #
 # Source: http://stackoverflow.com/questions/13925983/login-to-website-using-urllib2-python-2-7
-#
+# Modified for python3 https://docs.python.org/3/howto/urllib2.html
 class Login:
     def __init__(self):
         # The action/ target from the form
@@ -31,6 +31,8 @@ class Login:
         # we just made, but you can also just call opener.open() if you want)
         urllib.request.install_opener(self.opener)
 #
+        password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+        
         # Input parameters we are going to send
         payload = {
             'username':None,
@@ -38,16 +40,25 @@ class Login:
             'login':'login'
             }
 #
-        print("Please enter your login and password")
+        username = getpass.getuser()
+        password = getpass.getpass()
+        print("Please enter your password")
 #
-        if not payload['username']:
-            payload['username'] = input("Username:")
+#        if not payload['username']:
+#            payload['username'] = input("Username:")
 #
         if not payload["password"]:
             payload["password"] = getpass.getpass()
 #
         print("Thank you!")
 #
+#       implement password manager 
+        print(username)
+        password_mgr.add_password(None, authentication_url, username, password)
+        handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
+        # create "opener" (OpenerDirector instance)
+        opener = urllib.request.build_opener(handler)
+        
         # Use urllib to encode the payload
         data = urllib.parse.urlencode(payload)
 #
@@ -55,13 +66,17 @@ class Login:
 #
         # Build our Request object (supplying 'data' makes it a POST)
         req = urllib.request.Request(authentication_url, data)
+        #print(req)
 #
         print("Thank you x3!")
 #
         # Make the request and read the response
         resp = urllib.request.urlopen(req)
+        print(resp)
 #
         print("Thank you x4!")
+        
+#        req = opener.open
 #
         self.contents = resp.read()
 #
@@ -86,11 +101,11 @@ def fetchAnalyses():
 #    records. As of May '15 we have ~1,400, so we would need just p=1 and p=2. It will be maybe a long time
 #    before we actually need to go above p=2.
     print("Getting page 1!")
-    data1 = handle.getPage('http://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=1&awg=any')
+    data1 = handle.getPage('https://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=1&awg=any')
     print("Getting page 2!")
-    data2 = handle.getPage('http://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=2&awg=any')
+    data2 = handle.getPage('https://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=2&awg=any')
     print("Getting page 3!")
-    data3 = handle.getPage('http://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=3&awg=any')
+    data3 = handle.getPage('https://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=3&awg=any')
 # May '17 have 1,866, so may need to go above p=2 soonish
 # May '18 have 2,017, so have to do 3 pages
 # June 2020 have 2,310, still 3 pages
@@ -126,7 +141,7 @@ def fetchAnalyses():
             firstPart = parts[0].split("?")
             id = firstPart[1].replace("line=","")
             #download analysis details page
-            analysisHTML = handle.getPage("http://cms.cern.ch/iCMS/analysisadmin/getan?code="+id)
+            analysisHTML = handle.getPage("https://cms.cern.ch/iCMS/analysisadmin/getan?code="+id)
             o = open("data/analyses/id_"+id+".html", "w")
             o.write(analysisHTML)
             o.close()
@@ -137,7 +152,7 @@ def fetchAnalyses():
     print("Done")
 #
 def fetchANotes():
-    data = handle.getPage('https://icms.cern.ch/tools/idProvider/demand/http://cms.cern.ch/iCMS/user/annotes')
+    data = handle.getPage('https://icms.cern.ch/tools/idProvider/demand/https://cms.cern.ch/iCMS/user/annotes')
     f = open("data/annotes.html", "w")
     f.write(data)
     f.close()
@@ -169,7 +184,7 @@ countries = ["Armenia", "Austria", "Belarus", "Belgium",
              "USA", "USA2", "Uzbekistan"]
 def fetchAuthors():
     global handle
-    url = 'http://cms.cern.ch/iCMS/jsp/secr/sqlCountryMembers.jsp?country='
+    url = 'https://cms.cern.ch/iCMS/jsp/secr/sqlCountryMembers.jsp?country='
     for i in countries:
         if os.path.isfile("data/authors/%s.html" % i):
             continue
@@ -177,7 +192,7 @@ def fetchAuthors():
             if not handle:
                 handle = Login()
         if i == "USA2":
-            data = handle.getPage('http://cms.cern.ch/iCMS/jsp/secr/stats/cmsUS.jsp')
+            data = handle.getPage('https://cms.cern.ch/iCMS/jsp/secr/stats/cmsUS.jsp')
         else:
             data = handle.getPage(url + i.replace(' ', '%20'))
         f = open("data/authors/%s.html" % i, "w")
@@ -189,7 +204,7 @@ def fetchDetailPage(anotes_id):
     if handle == None:
         handle = Login()
 #
-    url = 'http://cms.cern.ch/iCMS/jsp/db_notes/showNoteDetails.jsp?noteID='
+    url = 'https://cms.cern.ch/iCMS/jsp/db_notes/showNoteDetails.jsp?noteID='
     data = handle.getPage(url + anotes_id.replace(' ', '%20'))
 #    print "detail note data: " + data
     f = open("data/detail_pages/%s.html" % anotes_id.replace('/', '_'), "w")
@@ -267,8 +282,9 @@ def parseANotes():
     return CMSANNotes
 #
 parsedANotes = parseANotes()
+print(parsedANotes)
 #
 for i in parsedANotes:
-    if not os.path.exists("data/detail_pages/%s.html" % i[0].replace('/', '_')):
+    if not os.path.isfile("data/detail_pages/%s.html" % i[0].replace('/', '_')):
         fetchDetailPage(i[0])
 # ---------------------------------- #
