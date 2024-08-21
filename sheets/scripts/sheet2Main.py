@@ -20,7 +20,7 @@ countries = ["Armenia", "Austria", "Belarus", "Belgium",
              "Pakistan", "Poland", "Portugal", "Russia", "Saudi Arabia",
              "Serbia", "Spain", "Sri Lanka", "Switzerland", 
              "Taiwan", "Thailand", "Turkey", "Ukraine", "United Kingdom", 
-             "USA", "Uzbekistan"]
+             "USA"]
 
 def parseANotes():
     f = open("data/annotes.html")
@@ -112,6 +112,7 @@ for i in countries:
     #The USA has special situation, it has two pages and these pages have to be merged
     if i == "USA":
         continue
+#    print("*** i: ", i, ", parsedMemberInfo: ",parseMemberInfo("data/authors/%s.html" % i))
     parsedMemberInfo = parsedMemberInfo + parseMemberInfo("data/authors/%s.html" % i)
 
 # Merge USA pages
