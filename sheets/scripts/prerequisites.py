@@ -25,17 +25,17 @@ import time
 class Login:
     def __init__(self):
         url = "https://icms.cern.ch/tools/"
-        cmd = 'ls -alh ~/private/sso-auth-cookie'
-#        cmd = 'auth-get-sso-cookie --outfile ~/private/sso-auth-cookie -u %s ;' % (url,)
+#        cmd = 'ls -alh ~/private/sso-auth-cookie'
+        cmd = 'auth-get-sso-cookie --outfile ~/private/sso-auth-cookie -u %s ;' % (url,)
 #        print("got sso-cookie to file ~/private/sso-auth-cookie")
         self.contents = cmd
 #        print(cmd)
         loginres=''
 #        print("in SSOgetPage.\n")
-        getFile += 'curl --silent --cookie-jar ~/private/sso-auth-cookie --cookie ~/private/sso-auth-cookie -k -L %s ' % (url,)
+        cmd += 'curl --silent --cookie-jar ~/private/sso-auth-cookie --cookie ~/private/sso-auth-cookie -k -L %s ' % (url,)
         res=''
         try:
-            res = subprocess.check_output(getFile, shell=True, stderr=subprocess.STDOUT)
+            res = subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 #            print( res.decode('utf-8') )
         except Exception as e:
             print ( "ERROR: got: %s" % (str(e),) )
@@ -59,20 +59,24 @@ def fetchAnalyses():
 #    This is the way I think we can approach it, p=1, p=2, ..., p=n; will have set's of up to one thousand
 #    records. As of May '15 we have ~1,400, so we would need just p=1 and p=2. It will be maybe a long time
 #    before we actually need to go above p=2.
+#    handle = Login()
     print("Getting page 1!")
-    data1 = handle.getPage('https://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=1&awg=any')
+    data1 = handle.getPage('https://icms.cern.ch/tools/idProvider/demand/https://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=1&awg=any')
+#    print(data1)
     print("Getting page 2!")
-    data2 = handle.getPage('https://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=2&awg=any')
+    data2 = handle.getPage('https://icms.cern.ch/tools/idProvider/demand/https://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=2&awg=any')
     print("Getting page 3!")
-    data3 = handle.getPage('https://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=3&awg=any')
+    data3 = handle.getPage('https://icms.cern.ch/tools/idProvider/demand/https://cms.cern.ch/iCMS/jsp/analysis/admin/cadilines.jsp?d-446288-p=3&awg=any')
 # May '17 have 1,866, so may need to go above p=2 soonish
 # May '18 have 2,017, so have to do 3 pages
 # June 2020 have 2,310, still 3 pages
 #
-    data = data1 + data2 + data3
+    data_CADI = data1 + data2 + data3
+#    print("going to print data")
+#    print(data_CADI)
  #   
     f = open("data/analyses.html", "wb")
-    f.write(data)
+    f.write(data_CADI)
     f.close()
 #
     print("Got list of analyses.\n")
@@ -83,7 +87,7 @@ def fetchAnalyses():
 #
     print("Retrieving the page for each analysis.\n")
 #
-    soup = BeautifulSoup(data, "html.parser")
+    soup = BeautifulSoup(data_CADI, "html.parser")
     trs = soup.findAll("tr",{ "class" : re.compile(r"^(odd|even)$") })
     print("Retrieving an individual HTML file takes 0.5 sec,")
     print("but there are {0} of them, so a rough estimation".format( len(trs) ))
@@ -151,11 +155,11 @@ def fetchAuthors():
 #            if not handle:
                 handle = Login()
         if i == "USA2":
-            data = handle.getPage('https://cms.cern.ch/iCMS/jsp/secr/stats/cmsUS.jsp')
+            data_Auth = handle.getPage('https://cms.cern.ch/iCMS/jsp/secr/stats/cmsUS.jsp')
         else:
-            data = handle.getPage(url + i.replace(' ', '%20'))
+            data_Auth = handle.getPage(url + i.replace(' ', '%20'))
         f = open("data/authors/%s.html" % i, "wb")
-        f.write(data)
+        f.write(data_Auth)
         f.close()
 #
 def fetchDetailPage(anotes_id):
@@ -164,10 +168,10 @@ def fetchDetailPage(anotes_id):
         handle = Login()
 #
     url = 'https://cms.cern.ch/iCMS/jsp/db_notes/showNoteDetails.jsp?noteID='
-    data = handle.getPage(url + anotes_id.replace(' ', '%20'))
+    data_Detail = handle.getPage(url + anotes_id.replace(' ', '%20'))
 #    print "detail note data: " + data
     f = open("data/detail_pages/%s.html" % anotes_id.replace('/', '_'), "wb")
-    f.write(data)
+    f.write(data_Detail)
     f.close()
 #
 def authorsCheck():
@@ -189,8 +193,8 @@ if not os.path.exists("sheets"):
 #
 if not os.path.isfile("data/analyses.html"):
     print("Fetching analyses")
-    handle = Login()
-    print("Logged in!")
+    if handle == None:
+        handle = Login()
     fetchAnalyses()
 #
 #print "waiting 100s"
